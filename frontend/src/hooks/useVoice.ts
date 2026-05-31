@@ -261,45 +261,6 @@ export const useVoice = () => {
     }
   }, [startListening, refreshEvents, startVolumeMonitoring, stopVolumeMonitoring, startDurationTimer, stopDurationTimer]);
 
-  // Stop voice recording
-  const stopRecording = useCallback(() => {
-    // Stop Web Speech API
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      recognitionRef.current = null;
-    }
-
-    // Stop MediaRecorder
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-
-    stopVolumeMonitoring();
-    stopDurationTimer();
-    stopListening();
-  }, [stopListening, stopVolumeMonitoring, stopDurationTimer]);
-
-  // Cancel current recording (slide to cancel)
-  const cancelRecording = useCallback(() => {
-    setIsCancelled(true);
-
-    // Stop Web Speech API
-    if (recognitionRef.current) {
-      recognitionRef.current.abort();
-      recognitionRef.current = null;
-    }
-
-    // Stop MediaRecorder without processing
-    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
-      mediaRecorderRef.current.stop();
-    }
-
-    stopVolumeMonitoring();
-    stopDurationTimer();
-    setVoiceState('idle');
-    clearCurrentInput();
-  }, [setIsCancelled, setVoiceState, clearCurrentInput, stopVolumeMonitoring, stopDurationTimer]);
-
   // ======================== 新的 process 方法 ========================
 
   /**
@@ -349,6 +310,68 @@ export const useVoice = () => {
     },
     [process, settings.language, refreshEvents]
   );
+
+  // Stop voice recording
+  const stopRecording = useCallback(async () => {
+    const hasWebSpeech = recognitionRef.current !== null;
+    const hasMediaRecorder = mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive';
+
+    // Stop Web Speech API
+    if (hasWebSpeech) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+
+      // Web Speech API: process the final text directly
+      stopVolumeMonitoring();
+      stopDurationTimer();
+      stopListening();
+
+      // Get the final text and process it
+      const { finalText } = useVoiceStore.getState();
+      if (finalText) {
+        try {
+          const response = await handleProcessText(finalText);
+          await refreshEvents();
+        } catch (error) {
+          console.error('Failed to process text:', error);
+        }
+      } else {
+        // No text recognized, go back to idle
+        setVoiceState('idle');
+      }
+      return;
+    }
+
+    // Stop MediaRecorder (will trigger onstop callback which handles processing)
+    if (hasMediaRecorder) {
+      mediaRecorderRef.current.stop();
+    }
+
+    stopVolumeMonitoring();
+    stopDurationTimer();
+    stopListening();
+  }, [stopListening, stopVolumeMonitoring, stopDurationTimer, handleProcessText, refreshEvents, setVoiceState]);
+
+  // Cancel current recording (slide to cancel)
+  const cancelRecording = useCallback(() => {
+    setIsCancelled(true);
+
+    // Stop Web Speech API
+    if (recognitionRef.current) {
+      recognitionRef.current.abort();
+      recognitionRef.current = null;
+    }
+
+    // Stop MediaRecorder without processing
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+    }
+
+    stopVolumeMonitoring();
+    stopDurationTimer();
+    setVoiceState('idle');
+    clearCurrentInput();
+  }, [setIsCancelled, setVoiceState, clearCurrentInput, stopVolumeMonitoring, stopDurationTimer]);
 
   /**
    * 确认操作（使用新接口 POST /api/voice/confirm）
