@@ -60,6 +60,7 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
         background: 'linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%)',
         borderRadius: '16px',
         border: '1px solid rgba(99, 102, 241, 0.06)',
+        minHeight: 0,
       }}
     >
       {/* Loading indicator at top */}

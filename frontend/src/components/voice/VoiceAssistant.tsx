@@ -450,6 +450,7 @@ const VoiceAssistant: React.FC = () => {
             borderBottom: '1px solid rgba(99, 102, 241, 0.08)',
             padding: '20px 24px',
             backdropFilter: 'blur(10px)',
+            flexShrink: 0,
           },
           body: {
             flex: 1,
@@ -457,6 +458,8 @@ const VoiceAssistant: React.FC = () => {
             flexDirection: 'column',
             padding: '20px 24px',
             background: 'transparent',
+            overflow: 'hidden',
+            minHeight: 0,
           },
         }}
         title={
@@ -519,153 +522,8 @@ const VoiceAssistant: React.FC = () => {
           </div>
         }
       >
-        {/* Bottom area - Voice button and quick actions */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '16px 0 8px', marginTop: 'auto' }}>
-          {/* Left: Quick action buttons - vertical */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'slide-in-left 0.5s ease-out' }}>
-            {quickActions.map((action, index) => (
-              <Tooltip key={index} title={action.text} placement="right">
-                <button
-                  onClick={() => handleQuickAction(action.text)}
-                  onMouseEnter={() => setHoveredAction(index)}
-                  onMouseLeave={() => setHoveredAction(null)}
-                  disabled={loading}
-                  className="quick-action-btn"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '6px 12px',
-                    border: 'none',
-                    borderRadius: '12px',
-                    background: hoveredAction === index ? action.gradient : '#ffffff',
-                    color: hoveredAction === index ? '#fff' : action.color,
-                    cursor: loading ? 'not-allowed' : 'pointer',
-                    fontSize: '12px',
-                    fontWeight: 600,
-                    lineHeight: 1,
-                    opacity: loading ? 0.5 : 1,
-                    whiteSpace: 'nowrap',
-                    boxShadow: hoveredAction === index
-                      ? `0 6px 20px ${action.color}40`
-                      : '0 2px 8px rgba(0, 0, 0, 0.06)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    transform: hoveredAction === index ? 'translateX(4px)' : 'translateX(0)',
-                  }}
-                >
-                  <span style={{ fontSize: '14px' }}>{action.icon}</span>
-                  <span>{action.label}</span>
-                </button>
-              </Tooltip>
-            ))}
-          </div>
-
-          {/* Center: Voice button + keyboard */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', animation: 'fade-in-up 0.6s ease-out' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-              {/* Voice button container */}
-              <div style={{ width: '88px', height: '88px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                {/* Pulse rings for listening state */}
-                {isListening && (
-                  <>
-                    <div style={{ position: 'absolute', width: '88px', height: '88px', borderRadius: '50%', border: '2px solid rgba(239, 68, 68, 0.3)', animation: 'pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
-                    <div style={{ position: 'absolute', width: '88px', height: '88px', borderRadius: '50%', border: '2px solid rgba(239, 68, 68, 0.2)', animation: 'pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.5s' }} />
-                  </>
-                )}
-
-                {/* Glow effect on hover */}
-                {isIdle && isVoiceHovered && (
-                  <div style={{
-                    position: 'absolute',
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%)',
-                    animation: 'breathe 2s ease-in-out infinite',
-                  }} />
-                )}
-
-                {/* Voice button */}
-                <button
-                  onClick={handleToggleRecording}
-                  onMouseEnter={() => setIsVoiceHovered(true)}
-                  onMouseLeave={() => { setIsVoiceHovered(false); setIsVoicePressed(false); }}
-                  onMouseDown={() => setIsVoicePressed(true)}
-                  onMouseUp={() => setIsVoicePressed(false)}
-                  disabled={isProcessing}
-                  style={{
-                    width: '64px',
-                    height: '64px',
-                    borderRadius: '50%',
-                    border: '4px solid rgba(255, 255, 255, 0.8)',
-                    cursor: isProcessing ? 'not-allowed' : 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: getVoiceGradient(),
-                    backgroundSize: '200% 200%',
-                    animation: `${getVoiceAnimation()}, gradient-flow 3s ease infinite`,
-                    boxShadow: isVoicePressed
-                      ? '0 4px 16px rgba(99, 102, 241, 0.3)'
-                      : isVoiceHovered
-                        ? '0 12px 40px rgba(99, 102, 241, 0.4)'
-                        : '0 8px 32px rgba(99, 102, 241, 0.3)',
-                    transform: isVoicePressed ? 'scale(0.95)' : isVoiceHovered ? 'scale(1.08)' : 'scale(1)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    position: 'relative',
-                    zIndex: 2,
-                  }}
-                >
-                  {isProcessing ? (
-                    <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} />
-                  ) : isListening ? (
-                    <StopOutlined style={{ fontSize: 24, color: '#fff' }} />
-                  ) : (
-                    <AudioOutlined style={{ fontSize: 24, color: '#fff' }} />
-                  )}
-                </button>
-              </div>
-
-              {/* Keyboard button */}
-              <Tooltip title={showKeyboard ? '关闭键盘' : '打开键盘'} placement="top">
-                <button
-                  onClick={handleToggleKeyboard}
-                  className="keyboard-btn"
-                  style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '12px',
-                    background: showKeyboard
-                      ? 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)'
-                      : 'linear-gradient(145deg, #ffffff, #f8fafc)',
-                    border: showKeyboard ? 'none' : '1.5px solid rgba(99, 102, 241, 0.1)',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: showKeyboard
-                      ? '0 6px 20px rgba(99, 102, 241, 0.3)'
-                      : '0 4px 12px rgba(0, 0, 0, 0.06)',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  }}
-                >
-                  <KeyOutlined style={{ fontSize: '16px', color: showKeyboard ? '#fff' : '#6366f1' }} />
-                </button>
-              </Tooltip>
-            </div>
-
-            {/* Status text */}
-            <Text style={{ fontSize: '12px', color: isListening ? '#ef4444' : isProcessing ? '#f59e0b' : '#9ca3af', fontWeight: 500 }}>
-              {isListening ? '正在聆听...' : isProcessing ? '处理中...' : '点击说话'}
-            </Text>
-          </div>
-
-          {/* Right: placeholder for balance */}
-          <div style={{ width: '100px' }} />
-        </div>
-
-        {/* Chat messages area - above voice button */}
-        <div className="chat-area" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        {/* Chat messages area */}
+        <div className="chat-area" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column', minHeight: 0 }}>
           <ConversationLog
             conversationHistory={conversationHistory}
             loading={loading}
@@ -822,6 +680,151 @@ const VoiceAssistant: React.FC = () => {
             </Text>
           </div>
         )}
+
+        {/* Bottom area - Voice button and quick actions */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '16px 0 8px', flexShrink: 0 }}>
+          {/* Left: Quick action buttons - vertical */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'slide-in-left 0.5s ease-out' }}>
+            {quickActions.map((action, index) => (
+              <Tooltip key={index} title={action.text} placement="right">
+                <button
+                  onClick={() => handleQuickAction(action.text)}
+                  onMouseEnter={() => setHoveredAction(index)}
+                  onMouseLeave={() => setHoveredAction(null)}
+                  disabled={loading}
+                  className="quick-action-btn"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    border: 'none',
+                    borderRadius: '12px',
+                    background: hoveredAction === index ? action.gradient : '#ffffff',
+                    color: hoveredAction === index ? '#fff' : action.color,
+                    cursor: loading ? 'not-allowed' : 'pointer',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    lineHeight: 1,
+                    opacity: loading ? 0.5 : 1,
+                    whiteSpace: 'nowrap',
+                    boxShadow: hoveredAction === index
+                      ? `0 6px 20px ${action.color}40`
+                      : '0 2px 8px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    transform: hoveredAction === index ? 'translateX(4px)' : 'translateX(0)',
+                  }}
+                >
+                  <span style={{ fontSize: '14px' }}>{action.icon}</span>
+                  <span>{action.label}</span>
+                </button>
+              </Tooltip>
+            ))}
+          </div>
+
+          {/* Center: Voice button + keyboard */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px', animation: 'fade-in-up 0.6s ease-out' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              {/* Voice button container */}
+              <div style={{ width: '88px', height: '88px', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                {/* Pulse rings for listening state */}
+                {isListening && (
+                  <>
+                    <div style={{ position: 'absolute', width: '88px', height: '88px', borderRadius: '50%', border: '2px solid rgba(239, 68, 68, 0.3)', animation: 'pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite' }} />
+                    <div style={{ position: 'absolute', width: '88px', height: '88px', borderRadius: '50%', border: '2px solid rgba(239, 68, 68, 0.2)', animation: 'pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite 0.5s' }} />
+                  </>
+                )}
+
+                {/* Glow effect on hover */}
+                {isIdle && isVoiceHovered && (
+                  <div style={{
+                    position: 'absolute',
+                    width: '80px',
+                    height: '80px',
+                    borderRadius: '50%',
+                    background: 'radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%)',
+                    animation: 'breathe 2s ease-in-out infinite',
+                  }} />
+                )}
+
+                {/* Voice button */}
+                <button
+                  onClick={handleToggleRecording}
+                  onMouseEnter={() => setIsVoiceHovered(true)}
+                  onMouseLeave={() => { setIsVoiceHovered(false); setIsVoicePressed(false); }}
+                  onMouseDown={() => setIsVoicePressed(true)}
+                  onMouseUp={() => setIsVoicePressed(false)}
+                  disabled={isProcessing}
+                  style={{
+                    width: '64px',
+                    height: '64px',
+                    borderRadius: '50%',
+                    border: '4px solid rgba(255, 255, 255, 0.8)',
+                    cursor: isProcessing ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: getVoiceGradient(),
+                    backgroundSize: '200% 200%',
+                    animation: `${getVoiceAnimation()}, gradient-flow 3s ease infinite`,
+                    boxShadow: isVoicePressed
+                      ? '0 4px 16px rgba(99, 102, 241, 0.3)'
+                      : isVoiceHovered
+                        ? '0 12px 40px rgba(99, 102, 241, 0.4)'
+                        : '0 8px 32px rgba(99, 102, 241, 0.3)',
+                    transform: isVoicePressed ? 'scale(0.95)' : isVoiceHovered ? 'scale(1.08)' : 'scale(1)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    position: 'relative',
+                    zIndex: 2,
+                  }}
+                >
+                  {isProcessing ? (
+                    <LoadingOutlined style={{ fontSize: 24, color: '#fff' }} />
+                  ) : isListening ? (
+                    <StopOutlined style={{ fontSize: 24, color: '#fff' }} />
+                  ) : (
+                    <AudioOutlined style={{ fontSize: 24, color: '#fff' }} />
+                  )}
+                </button>
+              </div>
+
+              {/* Keyboard button */}
+              <Tooltip title={showKeyboard ? '关闭键盘' : '打开键盘'} placement="top">
+                <button
+                  onClick={handleToggleKeyboard}
+                  className="keyboard-btn"
+                  style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '12px',
+                    background: showKeyboard
+                      ? 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)'
+                      : 'linear-gradient(145deg, #ffffff, #f8fafc)',
+                    border: showKeyboard ? 'none' : '1.5px solid rgba(99, 102, 241, 0.1)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: showKeyboard
+                      ? '0 6px 20px rgba(99, 102, 241, 0.3)'
+                      : '0 4px 12px rgba(0, 0, 0, 0.06)',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  }}
+                >
+                  <KeyOutlined style={{ fontSize: '16px', color: showKeyboard ? '#fff' : '#6366f1' }} />
+                </button>
+              </Tooltip>
+            </div>
+
+            {/* Status text */}
+            <Text style={{ fontSize: '12px', color: isListening ? '#ef4444' : isProcessing ? '#f59e0b' : '#9ca3af', fontWeight: 500 }}>
+              {isListening ? '正在聆听...' : isProcessing ? '处理中...' : '点击说话'}
+            </Text>
+          </div>
+
+          {/* Right: placeholder for balance */}
+          <div style={{ width: '100px' }} />
+        </div>
       </Card>
     </>
   );
