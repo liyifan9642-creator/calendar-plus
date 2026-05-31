@@ -1,5 +1,7 @@
 # VoiceCal 语音日历
-(git太大了传不上来）
+
+(git太大了传不上来SOS）
+
 > 🎙️ AI 驱动的语音日历工具，让日程管理更高效、更便捷
 
 [![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://www.java.com/)
