@@ -152,7 +152,7 @@ const HomePage: React.FC = () => {
               </Col>
 
               {/* 右侧：语音助手 */}
-              <Col xs={24} lg={10}>
+              <Col xs={24} lg={10} style={{ height: 'calc(100vh - 120px)' }}>
                 <VoiceAssistant />
               </Col>
             </Row>

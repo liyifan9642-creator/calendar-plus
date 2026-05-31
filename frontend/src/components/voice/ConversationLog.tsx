@@ -33,11 +33,29 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
 }) => {
   const chatEndRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const isInitialMount = useRef(true);
+  const prevHistoryLength = useRef(0);
 
-  // Auto scroll to bottom when new messages arrive
+  // Auto scroll to bottom only when new messages are added (not on initial mount)
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [conversationHistory]);
+    // Skip scroll on initial mount to prevent page jumping
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      prevHistoryLength.current = conversationHistory.length;
+      return;
+    }
+
+    // Only scroll if new messages were added
+    if (conversationHistory.length > prevHistoryLength.current) {
+      // Use container scrollTop instead of scrollIntoView to prevent page scrolling
+      setTimeout(() => {
+        if (containerRef.current) {
+          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+    prevHistoryLength.current = conversationHistory.length;
+  }, [conversationHistory.length]);
 
   // Handle scroll for loading more
   const handleScroll = useCallback(() => {
@@ -56,11 +74,13 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
       style={{
         flex: 1,
         overflowY: 'auto',
+        overflowX: 'hidden',
         padding: '16px',
         background: 'linear-gradient(180deg, #fafbff 0%, #f5f7ff 100%)',
         borderRadius: '16px',
         border: '1px solid rgba(99, 102, 241, 0.06)',
         minHeight: 0,
+        maxHeight: '100%',
       }}
     >
       {/* Loading indicator at top */}
@@ -83,8 +103,9 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            height: '100%',
+            flex: 1,
             gap: '16px',
+            minHeight: '120px',
           }}
         >
           <div
