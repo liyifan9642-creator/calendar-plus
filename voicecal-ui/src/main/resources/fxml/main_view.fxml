@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.voicecal.ui.javafx.widget.VoiceWaveformCanvas?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.voicecal.ui.javafx.controller.MainController"
+            prefWidth="1100" prefHeight="750"
+            styleClass="root-pane">
+
+    <!-- ==================== TOP: Status Bar ==================== -->
+    <top>
+        <HBox fx:id="statusBar" alignment="CENTER_LEFT" spacing="12"
+              styleClass="status-bar" prefHeight="52" maxHeight="52">
+            <padding>
+                <Insets top="8" right="20" bottom="8" left="20"/>
+            </padding>
+
+            <!-- App Title -->
+            <Label text="Voice Calendar" styleClass="app-title">
+                <font>
+                    <Font size="18"/>
+                </font>
+            </Label>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Status Indicator -->
+            <HBox alignment="CENTER" spacing="8">
+                <Label fx:id="statusDot" text="●" styleClass="status-dot status-idle">
+                    <font>
+                        <Font size="16"/>
+                    </font>
+                </Label>
+                <Label fx:id="statusLabel" text="待命" styleClass="status-label">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Label>
+            </HBox>
+
+            <Region prefWidth="16"/>
+
+            <!-- Confidence Indicator -->
+            <VBox alignment="CENTER" spacing="2">
+                <Label text="置信度" styleClass="confidence-sub-label">
+                    <font>
+                        <Font size="10"/>
+                    </font>
+                </Label>
+                <Label fx:id="confidenceLabel" text="--" styleClass="confidence-label">
+                    <font>
+                        <Font size="13"/>
+                    </font>
+                </Label>
+            </VBox>
+
+            <Region prefWidth="16"/>
+
+            <!-- Theme Toggle -->
+            <Button fx:id="themeToggleBtn" text="🌙" onAction="#onToggleTheme"
+                    styleClass="theme-toggle-btn" prefWidth="36" prefHeight="36"/>
+
+            <!-- Schedule Button -->
+            <Button fx:id="scheduleBtn" text="日程" onAction="#onShowSchedule"
+                    styleClass="schedule-btn" prefHeight="36"/>
+        </HBox>
+    </top>
+
+    <!-- ==================== CENTER: Main Content ==================== -->
+    <center>
+        <VBox spacing="0" styleClass="center-content">
+            <!-- Waveform Area -->
+            <StackPane fx:id="waveformContainer" styleClass="waveform-container"
+                       VBox.vgrow="ALWAYS">
+                <children>
+                    <VoiceWaveformCanvas fx:id="waveformCanvas" width="800" height="300">
+                    </VoiceWaveformCanvas>
+                </children>
+                <padding>
+                    <Insets top="20" right="24" bottom="10" left="24"/>
+                </padding>
+            </StackPane>
+
+            <!-- Recognition Result Area -->
+            <VBox fx:id="resultArea" spacing="8" styleClass="result-area">
+                <padding>
+                    <Insets top="12" right="24" bottom="8" left="24"/>
+                </padding>
+
+                <Label text="识别结果" styleClass="section-title">
+                    <font>
+                        <Font size="12"/>
+                    </font>
+                </Label>
+
+                <TextArea fx:id="resultText" editable="true" wrapText="true"
+                          prefHeight="70" maxHeight="100" styleClass="result-text"
+                          promptText="输入文字命令或点击录音..."/>
+
+                <!-- Intent & Entities Display -->
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <Label text="意图:" styleClass="field-label"/>
+                        <Label fx:id="intentLabel" text="--" styleClass="intent-value"/>
+                    </HBox>
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <Label text="消息:" styleClass="field-label"/>
+                        <Label fx:id="messageLabel" text="--" styleClass="message-value"
+                               maxWidth="400" wrapText="true"/>
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- Action Buttons -->
+            <HBox fx:id="buttonBar" spacing="12" alignment="CENTER"
+                  styleClass="button-bar">
+                <padding>
+                    <Insets top="10" right="24" bottom="16" left="24"/>
+                </padding>
+
+                <Button fx:id="startBtn" text="● 开始录音" onAction="#onStartRecording"
+                        styleClass="btn-primary" prefWidth="140" prefHeight="42">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Button>
+
+                <Button fx:id="stopBtn" text="■ 发送命令" onAction="#onStopRecording"
+                        styleClass="btn-danger" prefWidth="140" prefHeight="42"
+                        disable="true">
+                    <font>
+                        <Font size="14"/>
+                    </font>
+                </Button>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="clearBtn" text="清除" onAction="#onClearResult"
+                        styleClass="btn-secondary" prefWidth="90" prefHeight="38"/>
+
+                <Button fx:id="executeBtn" text="执行命令" onAction="#onExecuteCommand"
+                        styleClass="btn-accent" prefWidth="110" prefHeight="38"
+                        disable="true"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <!-- ==================== BOTTOM: Footer ==================== -->
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" styleClass="footer-bar" prefHeight="30" maxHeight="30">
+            <padding>
+                <Insets top="4" right="20" bottom="4" left="20"/>
+            </padding>
+            <Label fx:id="footerLabel" text="Voice Calendar v1.0.0" styleClass="footer-label">
+                <font>
+                    <Font size="11"/>
+                </font>
+            </Label>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -1,0 +1,393 @@
+/*
+ * Voice Calendar - Light Theme
+ * Modern, clean UI with soft shadows and subtle gradients
+ */
+
+/* ====================================================================
+   CSS Variables (via Looked-up Colors)
+   ==================================================================== */
+.root {
+    -fx-base: #f1f5f9;
+    -fx-background: #ffffff;
+    -fx-control-inner-background: #f8fafc;
+    -fx-accent: #3b82f6;
+    -fx-focus-color: #3b82f6;
+    -fx-faint-focus-color: transparent;
+
+    /* Custom variables */
+    -fx-card-bg: #ffffff;
+    -fx-card-shadow: rgba(0, 0, 0, 0.08);
+    -fx-border-color: #e2e8f0;
+    -fx-border-light: #f1f5f9;
+    -fx-text-primary: #0f172a;
+    -fx-text-secondary: #475569;
+    -fx-text-tertiary: #94a3b8;
+    -fx-status-bar-bg: #ffffff;
+    -fx-footer-bg: #f8fafc;
+    -fx-button-bar-bg: #f8fafc;
+    -fx-waveform-bg: #f8fafc;
+    -fx-result-bg: #ffffff;
+    -fx-hover-bg: #f1f5f9;
+    -fx-active-bg: #eff6ff;
+
+    /* Brand colors */
+    -fx-primary: #3b82f6;
+    -fx-primary-hover: #2563eb;
+    -fx-danger: #ef4444;
+    -fx-danger-hover: #dc2626;
+    -fx-success: #22c55e;
+    -fx-accent-purple: #8b5cf6;
+    -fx-accent-cyan: #06b6d4;
+}
+
+/* ====================================================================
+   Root Pane
+   ==================================================================== */
+.root-pane {
+    -fx-background-color: -fx-background;
+    -fx-font-family: "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+}
+
+/* ====================================================================
+   Status Bar (Top)
+   ==================================================================== */
+.status-bar {
+    -fx-background-color: -fx-status-bar-bg;
+    -fx-border-color: transparent transparent -fx-border-light transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, -fx-card-shadow, 8, 0, 0, 2);
+}
+
+.app-title {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-weight: bold;
+}
+
+.status-dot {
+    -fx-padding: 0 0 0 0;
+}
+
+.status-dot.status-idle {
+    -fx-text-fill: #94a3b8;
+}
+
+.status-dot.status-listening {
+    -fx-text-fill: #22c55e;
+}
+
+.status-dot.status-processing {
+    -fx-text-fill: #a78bfa;
+}
+
+.status-dot.status-completed {
+    -fx-text-fill: #3b82f6;
+}
+
+.status-dot.status-error {
+    -fx-text-fill: #ef4444;
+}
+
+.status-label {
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-weight: 600;
+}
+
+.confidence-sub-label {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+.confidence-label {
+    -fx-text-fill: -fx-accent-purple;
+    -fx-font-weight: bold;
+}
+
+.theme-toggle-btn {
+    -fx-background-color: -fx-hover-bg;
+    -fx-background-radius: 18;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 18;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.theme-toggle-btn:hover {
+    -fx-background-color: -fx-border-light;
+}
+
+.schedule-btn {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.schedule-btn:hover {
+    -fx-background-color: -fx-primary-hover;
+}
+
+/* ====================================================================
+   Center Content
+   ==================================================================== */
+.center-content {
+    -fx-background-color: -fx-background;
+}
+
+/* ====================================================================
+   Waveform Area
+   ==================================================================== */
+.waveform-container {
+    -fx-background-color: -fx-waveform-bg;
+    -fx-background-radius: 12;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-background-insets: 12;
+    -fx-border-insets: 12;
+}
+
+/* ====================================================================
+   Result Area
+   ==================================================================== */
+.result-area {
+    -fx-background-color: -fx-result-bg;
+}
+
+.section-title {
+    -fx-text-fill: -fx-text-tertiary;
+    -fx-font-weight: 600;
+    -fx-text-transform: uppercase;
+}
+
+.result-text {
+    -fx-control-inner-background: -fx-card-bg;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-font-size: 14;
+    -fx-text-fill: -fx-text-primary;
+}
+
+.result-text:focused {
+    -fx-border-color: -fx-accent;
+}
+
+.field-label {
+    -fx-text-fill: -fx-text-tertiary;
+    -fx-font-weight: 600;
+}
+
+.intent-value {
+    -fx-text-fill: -fx-accent-purple;
+    -fx-font-weight: bold;
+    -fx-font-size: 13;
+}
+
+.message-value {
+    -fx-text-fill: -fx-text-secondary;
+}
+
+/* ====================================================================
+   Button Bar
+   ==================================================================== */
+.button-bar {
+    -fx-background-color: -fx-button-bar-bg;
+    -fx-border-color: -fx-border-light transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.btn-primary {
+    -fx-background-color: -fx-primary;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(59, 130, 246, 0.3), 8, 0, 0, 2);
+}
+
+.btn-primary:hover {
+    -fx-background-color: -fx-primary-hover;
+}
+
+.btn-primary:disabled {
+    -fx-background-color: #cbd5e1;
+    -fx-effect: null;
+}
+
+.btn-danger {
+    -fx-background-color: -fx-danger;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(239, 68, 68, 0.3), 8, 0, 0, 2);
+}
+
+.btn-danger:hover {
+    -fx-background-color: -fx-danger-hover;
+}
+
+.btn-danger:disabled {
+    -fx-background-color: #cbd5e1;
+    -fx-effect: null;
+}
+
+.btn-secondary {
+    -fx-background-color: -fx-hover-bg;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-background-radius: 8;
+    -fx-border-color: -fx-border-light;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+
+.btn-secondary:hover {
+    -fx-background-color: -fx-border-color;
+}
+
+.btn-accent {
+    -fx-background-color: -fx-accent-purple;
+    -fx-text-fill: white;
+    -fx-background-radius: 8;
+    -fx-font-weight: 600;
+    -fx-cursor: hand;
+}
+
+.btn-accent:hover {
+    -fx-background-color: #7c3aed;
+}
+
+.btn-accent:disabled {
+    -fx-background-color: #cbd5e1;
+}
+
+/* ====================================================================
+   Footer
+   ==================================================================== */
+.footer-bar {
+    -fx-background-color: -fx-footer-bg;
+    -fx-border-color: -fx-border-light transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.footer-label {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+/* ====================================================================
+   Schedule View
+   ==================================================================== */
+.schedule-pane {
+    -fx-background-color: -fx-background;
+}
+
+.schedule-header {
+    -fx-background-color: -fx-status-bar-bg;
+    -fx-border-color: transparent transparent -fx-border-light transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.schedule-title {
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-weight: bold;
+}
+
+.tab-bar {
+    -fx-background-color: -fx-hover-bg;
+    -fx-background-radius: 8;
+    -fx-padding: 3;
+}
+
+.tab-toggle {
+    -fx-background-color: transparent;
+    -fx-background-radius: 6;
+    -fx-text-fill: -fx-text-secondary;
+    -fx-font-size: 13;
+    -fx-cursor: hand;
+    -fx-border-color: transparent;
+    -fx-border-radius: 6;
+}
+
+.tab-toggle:selected {
+    -fx-background-color: -fx-card-bg;
+    -fx-text-fill: -fx-text-primary;
+    -fx-font-weight: 600;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.08), 4, 0, 0, 1);
+}
+
+.schedule-list {
+    -fx-background-color: -fx-background;
+    -fx-border-color: transparent;
+}
+
+.schedule-list .list-cell {
+    -fx-background-color: transparent;
+    -fx-padding: 4 8 4 8;
+}
+
+.schedule-list .list-cell:empty {
+    -fx-background-color: transparent;
+}
+
+.schedule-list .list-cell:selected {
+    -fx-background-color: -fx-active-bg;
+}
+
+.schedule-list .list-cell:selected .label {
+    -fx-text-fill: -fx-text-primary;
+}
+
+.schedule-list .placeholder .label {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+.loading-label {
+    -fx-text-fill: -fx-text-tertiary;
+}
+
+.detail-panel {
+    -fx-background-color: -fx-card-bg;
+    -fx-border-color: -fx-border-light transparent transparent transparent;
+    -fx-border-width: 1 0 0 0;
+}
+
+.detail-value {
+    -fx-text-fill: -fx-text-primary;
+    -fx-wrap-text: true;
+}
+
+/* ====================================================================
+   ScrollBar Styling
+   ==================================================================== */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0;
+}
+
+/* ====================================================================
+   Progress Indicator
+   ==================================================================== */
+.progress-indicator {
+    -fx-progress-color: -fx-primary;
+}

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.voicecal</groupId>
+        <artifactId>voice-calendar</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>voicecal-voice</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Voice Calendar - Voice Processing</name>
+    <description>Speech recognition and synthesis module</description>
+
+    <dependencies>
+        <!-- Internal modules -->
+        <dependency>
+            <groupId>com.voicecal</groupId>
+            <artifactId>voicecal-core</artifactId>
+        </dependency>
+
+        <!-- Porcupine Wake Word Engine -->
+        <dependency>
+            <groupId>ai.picovoice</groupId>
+            <artifactId>porcupine-java</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <!-- Sherpa-ONNX Java SDK -->
+        <dependency>
+            <groupId>com.k2fsa.sherpa</groupId>
+            <artifactId>sherpa-onnx</artifactId>
+            <version>1.10.31</version>
+        </dependency>
+
+        <!-- Google Cloud Speech-to-Text -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-speech</artifactId>
+        </dependency>
+
+        <!-- Spring WebFlux for reactive audio streaming -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
+
+        <!-- Spring Context for @PostConstruct / @PreDestroy -->
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
+        </dependency>
+
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

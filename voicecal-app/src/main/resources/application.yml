@@ -1,0 +1,163 @@
+spring:
+  application:
+    name: voice-calendar
+
+  # H2 Database Configuration (Development)
+  datasource:
+    url: jdbc:h2:mem:voicedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # H2 Console (Development only)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # File upload configuration
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# Server configuration
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# Voice Calendar configuration
+voicecal:
+  voice:
+    default-language: zh-CN
+    recognition:
+      enabled: true
+      provider: google
+      sample-rate: 16000
+      streaming-enabled: false
+    wakeword:
+      enabled: false
+      access-key: "${PORCUPINE_ACCESS_KEY:}"
+      keywords:
+        - "日历助手"
+      sensitivities:
+        - 0.5
+      model-path: ""
+      library-path: ""
+      sample-rate: 16000
+      frame-length: 512
+
+  asr:
+    sherpa:
+      enabled: false
+      model-dir: "../models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20"
+      encoder-model: "encoder-epoch-99-avg-1.int8.onnx"
+      decoder-model: "decoder-epoch-99-avg-1.onnx"
+      joiner-model: "joiner-epoch-99-avg-1.int8.onnx"
+      tokens: "tokens.txt"
+      num-threads: 4
+      sample-rate: 16000
+      language: "zh"
+      noise-reduction-enabled: true
+      noise-reduction-strength: 0.5
+      agc-enabled: true
+      agc-target-level: 0.6
+      agc-max-gain: 10.0
+      silence-threshold: 0.01
+      silence-duration-ms: 1500
+      max-recording-duration-ms: 30000
+
+  nlu:
+    default-language: en
+    use-machine-learning: false
+    confidence-threshold: 0.6
+    intent:
+      recognizer-type: keyword
+      caching-enabled: true
+    entity:
+      date-time-extraction-enabled: true
+      location-extraction-enabled: true
+      attendee-extraction-enabled: true
+    langchain:
+      provider: openai
+      memory-window-size: 20
+
+  orchestrator:
+    max-retries: 3
+    base-retry-delay-ms: 500
+    min-asr-confidence: 0.6
+    require-confirmation-for-destructive: true
+    default-language: zh-CN
+    context-carryover-enabled: true
+    default-event-duration-minutes: 60
+    templates:
+      confirmation-required: "您确定要{action}吗？请回复确认或取消。"
+      event-created: "已为您创建日程：{title}，时间是{time}。"
+      event-deleted: "已删除日程：{title}。"
+      event-updated: "已更新日程：{title}。"
+      events-found: "找到{count}个日程：{events}。"
+      no-events-found: "在指定时间段内没有找到日程。"
+      intent-not-understood: "抱歉，我没有理解您的意思，请再说一次。"
+      processing-error: "处理过程中出现了问题，请稍后重试。"
+      asr-failed: "抱歉，我没有听清您说的话，请再说一次。"
+      confirmation-accepted: "好的，已确认。"
+      confirmation-rejected: "好的，已取消操作。"
+      available: "该时间段您有空。"
+      not-available: "该时间段您已有其他安排。"
+
+# LangChain4j LLM provider configuration
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://api.deepseek.com
+      api-key: sk-c33c4fa7b24e47e29bd88bed1ce0a066
+      model-name: deepseek-v4-flash
+      temperature: 0.3
+      max-tokens: 4096
+      log-requests: true
+      log-responses: true
+  ollama:
+    chat-model:
+      base-url: http://localhost:11434
+      model-name: qwen2.5:7b
+      temperature: 0.3
+      num-predict: 1024
+
+# Springdoc OpenAPI configuration
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging configuration
+logging:
+  level:
+    root: INFO
+    com.voicecal: DEBUG
+    org.springframework.web: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"

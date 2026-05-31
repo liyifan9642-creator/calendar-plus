@@ -1,0 +1,30 @@
+spring:
+  # Development-specific configuration
+  jpa:
+    show-sql: true
+
+# Google Cloud credentials (set via environment variable)
+# export GOOGLE_APPLICATION_CREDENTIALS=/path/to/credentials.json
+
+voicecal:
+  voice:
+    recognition:
+      provider: sherpa
+      streaming-enabled: true
+  asr:
+    sherpa:
+      enabled: true
+      model-dir: "models/sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20"
+      num-threads: 2
+      noise-reduction-enabled: true
+      agc-enabled: true
+  nlu:
+    langchain:
+      # Use Ollama (offline) in development by default
+      provider: ollama
+      memory-window-size: 20
+
+logging:
+  level:
+    com.voicecal: DEBUG
+    org.hibernate.SQL: DEBUG

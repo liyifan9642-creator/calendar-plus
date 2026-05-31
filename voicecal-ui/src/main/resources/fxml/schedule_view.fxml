@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.voicecal.ui.javafx.controller.ScheduleController"
+            prefWidth="500" prefHeight="600"
+            styleClass="schedule-pane">
+
+    <!-- ==================== TOP: Header ==================== -->
+    <top>
+        <VBox spacing="8" styleClass="schedule-header">
+            <padding>
+                <Insets top="16" right="16" bottom="12" left="16"/>
+            </padding>
+
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="日程列表" styleClass="schedule-title">
+                    <font>
+                        <Font size="20"/>
+                    </font>
+                </Label>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="refreshBtn" text="刷新" onAction="#onRefresh"
+                        styleClass="btn-secondary" prefHeight="30"/>
+            </HBox>
+
+            <!-- Tab Toggle: Today / This Week -->
+            <HBox spacing="0" styleClass="tab-bar">
+                <ToggleButton fx:id="todayTab" text="今日日程" selected="true"
+                              styleClass="tab-toggle" prefWidth="150" prefHeight="34"
+                              toggleGroup="$tabGroup" onAction="#onTodayTab"/>
+                <ToggleButton fx:id="weekTab" text="本周日程"
+                              styleClass="tab-toggle" prefWidth="150" prefHeight="34"
+                              toggleGroup="$tabGroup" onAction="#onWeekTab"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ==================== CENTER: Schedule List ==================== -->
+    <center>
+        <StackPane>
+            <children>
+                <!-- Schedule List -->
+                <ListView fx:id="scheduleListView" styleClass="schedule-list"
+                          placeholder="暂无日程">
+                    <padding>
+                        <Insets top="4" right="8" bottom="4" left="8"/>
+                    </padding>
+                </ListView>
+
+                <!-- Loading Indicator (shown while fetching) -->
+                <VBox fx:id="loadingOverlay" alignment="CENTER" spacing="12"
+                      visible="false" managed="false">
+                    <ProgressIndicator prefWidth="40" prefHeight="40"/>
+                    <Label text="加载中..." styleClass="loading-label"/>
+                </VBox>
+            </children>
+        </StackPane>
+    </center>
+
+    <!-- ==================== BOTTOM: Detail Panel ==================== -->
+    <bottom>
+        <VBox fx:id="detailPanel" spacing="6" styleClass="detail-panel"
+              visible="false" managed="false">
+            <padding>
+                <Insets top="12" right="16" bottom="16" left="16"/>
+            </padding>
+
+            <Label text="日程详情" styleClass="section-title">
+                <font>
+                    <Font size="13"/>
+                </font>
+            </Label>
+
+            <GridPane hgap="12" vgap="6">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="60" prefWidth="60"/>
+                    <ColumnConstraints minWidth="200" hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="标题:" styleClass="field-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <Label fx:id="detailTitle" text="" styleClass="detail-value"
+                       GridPane.rowIndex="0" GridPane.columnIndex="1" wrapText="true"/>
+
+                <Label text="时间:" styleClass="field-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <Label fx:id="detailTime" text="" styleClass="detail-value"
+                       GridPane.rowIndex="1" GridPane.columnIndex="1" wrapText="true"/>
+
+                <Label text="地点:" styleClass="field-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <Label fx:id="detailLocation" text="" styleClass="detail-value"
+                       GridPane.rowIndex="2" GridPane.columnIndex="1" wrapText="true"/>
+
+                <Label text="描述:" styleClass="field-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <Label fx:id="detailDescription" text="" styleClass="detail-value"
+                       GridPane.rowIndex="3" GridPane.columnIndex="1" wrapText="true"
+                       maxHeight="60"/>
+
+                <Label text="状态:" styleClass="field-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+                <Label fx:id="detailStatus" text="" styleClass="detail-value"
+                       GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+        </VBox>
+    </bottom>
+
+    <toggleGroups>
+        <ToggleGroup fx:id="tabGroup"/>
+    </toggleGroups>
+
+</BorderPane>

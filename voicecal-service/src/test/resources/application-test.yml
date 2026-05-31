@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: voicecal-service-test
+
+  # H2 in-memory database for testing
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # JPA / Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # Disable H2 console in tests
+  h2:
+    console:
+      enabled: false
+
+  # Disable scheduled tasks during tests (tests invoke them manually)
+  task:
+    scheduling:
+      enabled: false
+
+# Logging
+logging:
+  level:
+    root: WARN
+    com.voicecal: DEBUG
+    org.springframework.orm.jpa: DEBUG
+    org.hibernate.SQL: DEBUG
