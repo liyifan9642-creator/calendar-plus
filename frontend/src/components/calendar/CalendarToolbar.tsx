@@ -126,10 +126,10 @@ const CalendarToolbar: React.FC = () => {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          padding: '16px 24px',
-          marginBottom: '20px',
+          padding: '10px 16px',
+          marginBottom: '12px',
           background: 'linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,250,255,0.95))',
-          borderRadius: '20px',
+          borderRadius: '12px',
           boxShadow: isHovered
             ? '0 16px 48px rgba(99, 102, 241, 0.1), 0 4px 16px rgba(0, 0, 0, 0.04)'
             : '0 8px 32px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02)',
@@ -139,13 +139,13 @@ const CalendarToolbar: React.FC = () => {
         }}
       >
         {/* Left: Title area */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div
             className="logo-icon"
             style={{
-              width: '40px',
-              height: '40px',
-              borderRadius: '14px',
+              width: '30px',
+              height: '30px',
+              borderRadius: '8px',
               background: 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)',
               backgroundSize: '200% 200%',
               display: 'flex',
@@ -154,13 +154,13 @@ const CalendarToolbar: React.FC = () => {
               boxShadow: '0 8px 20px rgba(99, 102, 241, 0.3)',
             }}
           >
-            <CalendarOutlined style={{ fontSize: '20px', color: '#fff' }} />
+            <CalendarOutlined style={{ fontSize: '14px', color: '#fff' }} />
           </div>
           <div>
-            <span style={{ fontSize: '17px', fontWeight: 700, color: '#1e1b4b', letterSpacing: '-0.3px' }}>
+            <span style={{ fontSize: '14px', fontWeight: 600, color: '#1e1b4b', letterSpacing: '-0.3px' }}>
               日历
             </span>
-            <div style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 400, marginTop: '2px' }}>
+            <div style={{ fontSize: '10px', color: '#9ca3af', fontWeight: 400, marginTop: '1px' }}>
               管理您的日程安排
             </div>
           </div>
@@ -175,9 +175,9 @@ const CalendarToolbar: React.FC = () => {
               onClick={toggleSearch}
               type={showSearch ? 'primary' : 'default'}
               style={{
-                borderRadius: '14px',
-                width: '42px',
-                height: '42px',
+                borderRadius: '8px',
+                width: '32px',
+                height: '32px',
                 ...(showSearch
                   ? {
                       background: 'linear-gradient(135deg, #6366f1, #818cf8)',
@@ -196,9 +196,9 @@ const CalendarToolbar: React.FC = () => {
             className="toolbar-btn"
             onClick={goToToday}
             style={{
-              borderRadius: '14px',
-              height: '42px',
-              padding: '0 20px',
+              borderRadius: '8px',
+              height: '32px',
+              padding: '0 14px',
               fontWeight: 600,
               fontSize: '13px',
               background: 'rgba(255, 255, 255, 0.8)',
@@ -215,9 +215,9 @@ const CalendarToolbar: React.FC = () => {
             icon={<PlusOutlined />}
             onClick={openCreateForm}
             style={{
-              borderRadius: '14px',
-              height: '42px',
-              padding: '0 24px',
+              borderRadius: '8px',
+              height: '32px',
+              padding: '0 16px',
               fontWeight: 600,
               fontSize: '13px',
             }}

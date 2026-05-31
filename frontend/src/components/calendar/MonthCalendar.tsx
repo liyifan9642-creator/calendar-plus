@@ -240,7 +240,7 @@ const MonthCalendar: React.FC = () => {
         }
         style={{
           height: '100%',
-          borderRadius: '24px',
+          borderRadius: '14px',
           border: 'none',
           boxShadow: isHovered
             ? '0 20px 60px rgba(99, 102, 241, 0.1), 0 8px 24px rgba(0, 0, 0, 0.06)'
@@ -252,9 +252,9 @@ const MonthCalendar: React.FC = () => {
         styles={{
           header: {
             borderBottom: '1px solid rgba(99, 102, 241, 0.06)',
-            padding: '18px 24px',
+            padding: '12px 16px',
           },
-          body: { padding: '20px 24px' },
+          body: { padding: '12px 16px' },
         }}
         loading={loading}
       >
@@ -264,7 +264,7 @@ const MonthCalendar: React.FC = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(7, 1fr)',
             gap: '6px',
-            marginBottom: '14px',
+            marginBottom: '8px',
           }}
         >
           {weekDayNames.map((day, index) => (
@@ -273,7 +273,7 @@ const MonthCalendar: React.FC = () => {
               className="weekday-header"
               style={{
                 textAlign: 'center',
-                padding: '10px 0',
+                padding: '6px 0',
                 fontWeight: 700,
                 color: index >= 5 ? '#ef4444' : '#6366f1',
                 fontSize: '12px',

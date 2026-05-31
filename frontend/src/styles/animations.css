@@ -18,10 +18,10 @@
   --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  --radius-sm: 10px;
-  --radius-md: 14px;
-  --radius-lg: 18px;
-  --radius-xl: 24px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 14px;
 }
 
 /* ---- 关键帧动画 ---- */
@@ -295,9 +295,9 @@ input:focus, textarea:focus {
 /* ---- Tag 样式 ---- */
 
 .ant-tag {
-  border-radius: 20px !important;
+  border-radius: 12px !important;
   font-weight: 500 !important;
-  padding: 2px 12px !important;
+  padding: 2px 8px !important;
 }
 
 /* ---- 空状态美化 ---- */
@@ -315,9 +315,9 @@ input:focus, textarea:focus {
 /* ---- 工具提示美化 ---- */
 
 .ant-tooltip-inner {
-  border-radius: 10px !important;
-  padding: 8px 14px !important;
-  font-size: 12px !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 11px !important;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
 }
 

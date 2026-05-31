@@ -120,8 +120,8 @@ const HomePage: React.FC = () => {
       <div
         className="page-container"
         style={{
-          padding: '28px',
-          height: 'calc(100vh - 64px)',
+          padding: '16px',
+          height: 'calc(100vh - 52px)',
           overflow: 'auto',
           background: 'linear-gradient(135deg, #f5f7ff 0%, #eef2ff 25%, #faf5ff 50%, #f0f9ff 75%, #f5f7ff 100%)',
           backgroundSize: '400% 400%',
@@ -139,7 +139,7 @@ const HomePage: React.FC = () => {
 
           {/* 主要内容区域：左侧日历，右侧语音助手 */}
           <div className="main-content">
-            <Row gutter={[28, 28]} style={{ marginBottom: '28px' }}>
+            <Row gutter={[16, 16]} style={{ marginBottom: '16px' }}>
               {/* 左侧：日历区域 */}
               <Col xs={24} lg={14}>
                 <Space direction="vertical" style={{ width: '100%' }} size="middle">

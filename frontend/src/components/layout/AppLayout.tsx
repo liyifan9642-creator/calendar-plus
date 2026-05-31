@@ -94,7 +94,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   return (
     <>
       <style>{layoutStyles}</style>
-      <Layout className="app-layout">
+      <Layout className="app-layout" style={{ maxWidth: '80%', margin: '0 auto' }}>
         <AppHeader onToggleSidebar={toggleSidebar} />
         <Content
           className="app-content"

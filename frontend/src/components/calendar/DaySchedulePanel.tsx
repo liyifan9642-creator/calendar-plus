@@ -311,9 +311,9 @@ const DaySchedulePanel: React.FC = () => {
         onDragEnd={handleDragEnd}
         onClick={() => openEventDetail(event)}
         style={{
-          padding: '16px 18px',
-          marginBottom: isTimeline ? '8px' : '12px',
-          borderRadius: '18px',
+          padding: '10px 12px',
+          marginBottom: isTimeline ? '6px' : '8px',
+          borderRadius: '10px',
           border: `1.5px solid ${isDragOver ? cardSolidColor : 'rgba(0, 0, 0, 0.04)'}`,
           borderLeft: `4px solid ${cardSolidColor}`,
           cursor: 'pointer',
@@ -324,7 +324,7 @@ const DaySchedulePanel: React.FC = () => {
             : '0 4px 16px rgba(0, 0, 0, 0.04)',
           display: 'flex',
           alignItems: 'flex-start',
-          gap: '14px',
+          gap: '10px',
         }}
       >
         {/* Drag handle */}
@@ -340,10 +340,10 @@ const DaySchedulePanel: React.FC = () => {
           style={{
             flexShrink: 0,
             textAlign: 'center',
-            minWidth: '60px',
-            padding: '10px 12px',
+            minWidth: '48px',
+            padding: '6px 8px',
             background: `${cardSolidColor}10`,
-            borderRadius: '14px',
+            borderRadius: '8px',
             border: `1px solid ${cardSolidColor}15`,
           }}
         >
@@ -370,8 +370,8 @@ const DaySchedulePanel: React.FC = () => {
 
         {/* Content */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-            <Text strong ellipsis={{ tooltip: event.title }} style={{ flex: 1, fontSize: '15px', color: '#1e1b4b', fontWeight: 600 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <Text strong ellipsis={{ tooltip: event.title }} style={{ flex: 1, fontSize: '13px', color: '#1e1b4b', fontWeight: 600 }}>
               {event.title}
             </Text>
             <Tag
@@ -380,8 +380,8 @@ const DaySchedulePanel: React.FC = () => {
                 margin: 0,
                 fontSize: '11px',
                 lineHeight: '20px',
-                padding: '0 10px',
-                borderRadius: '20px',
+                padding: '0 8px',
+                borderRadius: '12px',
                 fontWeight: 600,
                 border: 'none',
                 boxShadow: `0 2px 8px ${statusColor}30`,
@@ -394,9 +394,9 @@ const DaySchedulePanel: React.FC = () => {
           {event.location && (
             <Space size={6} style={{ marginBottom: '6px' }}>
               <div style={{
-                width: '20px',
-                height: '20px',
-                borderRadius: '6px',
+                width: '16px',
+                height: '16px',
+                borderRadius: '4px',
                 background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)',
                 display: 'flex',
                 alignItems: 'center',
@@ -479,7 +479,7 @@ const DaySchedulePanel: React.FC = () => {
     const hours = getDayHours();
 
     return (
-      <div style={{ position: 'relative', paddingLeft: '64px' }}>
+      <div style={{ position: 'relative', paddingLeft: '52px' }}>
         <div className="timeline-line" />
         {hours.map((hour) => {
           const hourEvents = getEventsForHour(hour);
@@ -490,7 +490,7 @@ const DaySchedulePanel: React.FC = () => {
               key={hour}
               style={{
                 display: 'flex',
-                minHeight: '56px',
+                minHeight: '44px',
                 borderBottom: '1px solid rgba(99, 102, 241, 0.04)',
                 position: 'relative',
               }}
@@ -499,8 +499,8 @@ const DaySchedulePanel: React.FC = () => {
               <div
                 style={{
                   position: 'absolute',
-                  left: '-64px',
-                  width: '56px',
+                  left: '-52px',
+                  width: '44px',
                   textAlign: 'right',
                   paddingRight: '16px',
                   fontSize: '12px',
@@ -519,8 +519,8 @@ const DaySchedulePanel: React.FC = () => {
                     position: 'absolute',
                     left: '-6px',
                     top: '0',
-                    width: '14px',
-                    height: '14px',
+                    width: '10px',
+                    height: '10px',
                     borderRadius: '50%',
                     background: 'linear-gradient(135deg, #6366f1, #818cf8)',
                     transform: 'translateY(-7px)',
@@ -631,7 +631,7 @@ const DaySchedulePanel: React.FC = () => {
         }
         style={{
           height: '100%',
-          borderRadius: '24px',
+          borderRadius: '14px',
           border: 'none',
           boxShadow: isHovered
             ? '0 20px 60px rgba(14, 165, 233, 0.1), 0 8px 24px rgba(0, 0, 0, 0.06)'
@@ -643,11 +643,11 @@ const DaySchedulePanel: React.FC = () => {
         styles={{
           header: {
             borderBottom: '1px solid rgba(14, 165, 233, 0.06)',
-            padding: '18px 24px',
+            padding: '12px 16px',
           },
           body: {
-            padding: '20px 24px',
-            maxHeight: 'calc(100vh - 240px)',
+            padding: '12px 16px',
+            maxHeight: 'calc(100vh - 200px)',
             overflowY: 'auto',
           },
         }}
@@ -659,9 +659,9 @@ const DaySchedulePanel: React.FC = () => {
               <Space direction="vertical" align="center" size="middle">
                 <div
                   style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '24px',
+                    width: '56px',
+                    height: '56px',
+                    borderRadius: '16px',
                     background: 'linear-gradient(135deg, #e0f2fe, #bae6fd)',
                     display: 'flex',
                     alignItems: 'center',
@@ -669,7 +669,7 @@ const DaySchedulePanel: React.FC = () => {
                     boxShadow: '0 8px 24px rgba(14, 165, 233, 0.2)',
                   }}
                 >
-                  <CalendarOutlined style={{ fontSize: '36px', color: '#0ea5e9' }} />
+                  <CalendarOutlined style={{ fontSize: '24px', color: '#0ea5e9' }} />
                 </div>
                 <Text style={{ color: '#6b7280', fontSize: '14px', fontWeight: 500 }}>暂无事件</Text>
                 <Button
@@ -689,7 +689,7 @@ const DaySchedulePanel: React.FC = () => {
                 </Button>
               </Space>
             }
-            style={{ padding: '48px 0' }}
+            style={{ padding: '24px 0' }}
           />
         ) : viewMode === 'timeline' ? (
           renderTimeline()

@@ -147,25 +147,25 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '0 32px',
+          padding: '0 20px',
           background: 'linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,250,255,0.95))',
           borderBottom: '1px solid rgba(99, 102, 241, 0.06)',
           boxShadow: isHovered
             ? '0 8px 32px rgba(99, 102, 241, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)'
             : '0 4px 16px rgba(0, 0, 0, 0.02)',
           zIndex: 10,
-          height: '68px',
+          height: '52px',
           backdropFilter: 'blur(20px)',
           transition: 'all 0.3s ease',
         }}
       >
-        <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '16px', cursor: 'pointer' }}>
+        <div className="logo-container" style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
           <div
             className="logo-icon"
             style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '14px',
+              width: '32px',
+              height: '32px',
+              borderRadius: '10px',
               background: 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)',
               backgroundSize: '200% 200%',
               display: 'flex',
@@ -176,14 +176,14 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
               overflow: 'hidden',
             }}
           >
-            <CalendarOutlined style={{ fontSize: '22px', color: '#fff' }} />
+            <CalendarOutlined style={{ fontSize: '16px', color: '#fff' }} />
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
             <span
               className="logo-text"
               style={{
-                fontSize: '20px',
-                fontWeight: 800,
+                fontSize: '16px',
+                fontWeight: 700,
                 letterSpacing: '-0.5px',
               }}
             >
@@ -191,7 +191,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
             </span>
             <span
               style={{
-                fontSize: '13px',
+                fontSize: '11px',
                 color: '#9ca3af',
                 fontWeight: 500,
               }}
@@ -210,9 +210,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
               onClick={onToggleSidebar}
               style={{
                 color: '#6b7280',
-                borderRadius: '12px',
-                width: '40px',
-                height: '40px',
+                borderRadius: '8px',
+                width: '32px',
+                height: '32px',
               }}
             />
           </Tooltip>
@@ -223,9 +223,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
               icon={<SettingOutlined />}
               style={{
                 color: '#6b7280',
-                borderRadius: '12px',
-                width: '40px',
-                height: '40px',
+                borderRadius: '8px',
+                width: '32px',
+                height: '32px',
               }}
             />
           </Tooltip>
@@ -236,9 +236,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({ onToggleSidebar }) => {
               icon={<QuestionCircleOutlined />}
               style={{
                 color: '#6b7280',
-                borderRadius: '12px',
-                width: '40px',
-                height: '40px',
+                borderRadius: '8px',
+                width: '32px',
+                height: '32px',
               }}
             />
           </Tooltip>

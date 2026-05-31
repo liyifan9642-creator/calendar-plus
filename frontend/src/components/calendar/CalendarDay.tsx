@@ -135,7 +135,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
 
   const getDayNumberStyle = () => {
     const base: React.CSSProperties = {
-      fontSize: compact ? '13px' : '14px',
+      fontSize: compact ? '12px' : '13px',
       fontWeight: day.isToday || day.isSelected ? 700 : 500,
       color: getTextColor(),
       lineHeight: 1,
@@ -148,8 +148,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     if (day.isToday && !day.isSelected) {
       return {
         ...base,
-        width: '30px',
-        height: '30px',
+        width: '24px',
+        height: '24px',
         borderRadius: '50%',
         background: 'linear-gradient(135deg, #6366f1, #818cf8)',
         color: '#fff',
@@ -160,7 +160,7 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
     return base;
   };
 
-  const cellHeight = compact ? '48px' : '64px';
+  const cellHeight = compact ? '40px' : '48px';
 
   return (
     <>
@@ -189,8 +189,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             minHeight: cellHeight,
-            padding: compact ? '6px' : '8px',
-            borderRadius: '16px',
+            padding: compact ? '4px' : '6px',
+            borderRadius: '10px',
             cursor: 'pointer',
             background: getBackground(),
             border: isDragTarget ? '2px dashed #6366f1' : '2px solid transparent',
@@ -214,9 +214,9 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
               style={{
                 display: 'flex',
                 gap: '4px',
-                marginTop: compact ? '4px' : '6px',
+                marginTop: compact ? '3px' : '4px',
                 position: 'absolute',
-                bottom: compact ? '6px' : '8px',
+                bottom: compact ? '4px' : '6px',
               }}
             >
               {day.events.slice(0, compact ? 2 : 3).map((event, idx) => (
@@ -224,8 +224,8 @@ const CalendarDay: React.FC<CalendarDayProps> = ({
                   key={idx}
                   className="event-dot"
                   style={{
-                    width: compact ? '5px' : '7px',
-                    height: compact ? '5px' : '7px',
+                    width: compact ? '4px' : '5px',
+                    height: compact ? '4px' : '5px',
                     borderRadius: '50%',
                     backgroundColor: day.isSelected ? 'rgba(255,255,255,0.9)' : '#6366f1',
                     boxShadow: !day.isSelected ? '0 2px 6px rgba(99, 102, 241, 0.3)' : 'none',

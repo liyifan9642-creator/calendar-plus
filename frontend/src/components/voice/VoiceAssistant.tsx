@@ -519,145 +519,7 @@ const VoiceAssistant: React.FC = () => {
           </div>
         }
       >
-        {/* Chat messages area */}
-        <div className="chat-area">
-          <ConversationLog
-            conversationHistory={conversationHistory}
-            loading={loading}
-            onSelectOption={selectOption}
-            onConfirm={confirm}
-            onCancel={cancel}
-          />
-        </div>
-
-        {/* Recognition result popup */}
-        {showRecognition && finalText && (
-          <div
-            style={{
-              padding: '14px 18px',
-              marginBottom: '14px',
-              background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.9), rgba(220, 252, 231, 0.9))',
-              border: '1px solid rgba(34, 197, 94, 0.2)',
-              borderRadius: '16px',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              animation: 'fade-in-scale 0.4s ease-out',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 8px 24px rgba(34, 197, 94, 0.1)',
-            }}
-          >
-            <Text style={{ color: '#166534', fontWeight: 600 }}>{finalText}</Text>
-            <Tag
-              color="success"
-              style={{
-                borderRadius: '20px',
-                padding: '2px 12px',
-                fontWeight: 600,
-                background: 'linear-gradient(135deg, #22c55e, #4ade80)',
-                border: 'none',
-                color: '#fff',
-                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
-              }}
-            >
-              已识别
-            </Tag>
-          </div>
-        )}
-
-        {/* Real-time recognition text */}
-        {isListening && interimText && (
-          <div
-            style={{
-              padding: '14px 18px',
-              marginBottom: '14px',
-              background: 'linear-gradient(135deg, rgba(255, 251, 235, 0.9), rgba(254, 243, 199, 0.9))',
-              border: '1px solid rgba(245, 158, 11, 0.2)',
-              borderRadius: '16px',
-              animation: 'fade-in-up 0.3s ease-out',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 8px 24px rgba(245, 158, 11, 0.1)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div className="wave-container" style={{ height: '16px' }}>
-                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
-                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
-                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
-              </div>
-              <Text style={{ fontStyle: 'italic', color: '#92400e', fontWeight: 500 }}>
-                {interimText}
-              </Text>
-            </div>
-          </div>
-        )}
-
-        {/* Keyboard input */}
-        {showKeyboard && (
-          <div
-            style={{
-              display: 'flex',
-              gap: '12px',
-              marginBottom: '18px',
-              padding: '14px',
-              background: 'linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,255,0.9))',
-              borderRadius: '18px',
-              border: '1px solid rgba(99, 102, 241, 0.1)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
-              animation: 'slide-in-left 0.3s ease-out',
-              backdropFilter: 'blur(20px)',
-            }}
-          >
-            <input
-              ref={inputRef}
-              value={textInput}
-              onChange={(e) => setTextInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="输入消息..."
-              className="input-glow"
-              style={{
-                flex: 1,
-                padding: '12px 18px',
-                border: '1.5px solid #e5e7eb',
-                borderRadius: '14px',
-                outline: 'none',
-                fontSize: '14px',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                background: 'rgba(255, 255, 255, 0.8)',
-                color: '#1e1b4b',
-              }}
-            />
-            <button
-              onClick={handleSendText}
-              disabled={!textInput.trim() || loading}
-              className="send-btn"
-              style={{
-                padding: '12px 22px',
-                background: textInput.trim()
-                  ? 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)'
-                  : '#e5e7eb',
-                backgroundSize: '200% 200%',
-                animation: textInput.trim() ? 'gradient-flow 3s ease infinite' : 'none',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '14px',
-                cursor: textInput.trim() ? 'pointer' : 'not-allowed',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: textInput.trim()
-                  ? '0 8px 24px rgba(99, 102, 241, 0.3)'
-                  : 'none',
-                transform: textInput.trim() ? 'scale(1)' : 'scale(0.95)',
-              }}
-            >
-              <SendOutlined style={{ fontSize: '16px' }} />
-            </button>
-          </div>
-        )}
-
-        {/* Bottom area */}
+        {/* Bottom area - Voice button and quick actions */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', padding: '16px 0 8px', marginTop: 'auto' }}>
           {/* Left: Quick action buttons - vertical */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', animation: 'slide-in-left 0.5s ease-out' }}>
@@ -801,6 +663,144 @@ const VoiceAssistant: React.FC = () => {
           {/* Right: placeholder for balance */}
           <div style={{ width: '100px' }} />
         </div>
+
+        {/* Chat messages area - above voice button */}
+        <div className="chat-area" style={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <ConversationLog
+            conversationHistory={conversationHistory}
+            loading={loading}
+            onSelectOption={selectOption}
+            onConfirm={confirm}
+            onCancel={cancel}
+          />
+        </div>
+
+        {/* Recognition result popup */}
+        {showRecognition && finalText && (
+          <div
+            style={{
+              padding: '14px 18px',
+              marginBottom: '14px',
+              background: 'linear-gradient(135deg, rgba(240, 253, 244, 0.9), rgba(220, 252, 231, 0.9))',
+              border: '1px solid rgba(34, 197, 94, 0.2)',
+              borderRadius: '16px',
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              animation: 'fade-in-scale 0.4s ease-out',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 24px rgba(34, 197, 94, 0.1)',
+            }}
+          >
+            <Text style={{ color: '#166534', fontWeight: 600 }}>{finalText}</Text>
+            <Tag
+              color="success"
+              style={{
+                borderRadius: '20px',
+                padding: '2px 12px',
+                fontWeight: 600,
+                background: 'linear-gradient(135deg, #22c55e, #4ade80)',
+                border: 'none',
+                color: '#fff',
+                boxShadow: '0 4px 12px rgba(34, 197, 94, 0.3)',
+              }}
+            >
+              已识别
+            </Tag>
+          </div>
+        )}
+
+        {/* Real-time recognition text */}
+        {isListening && interimText && (
+          <div
+            style={{
+              padding: '14px 18px',
+              marginBottom: '14px',
+              background: 'linear-gradient(135deg, rgba(255, 251, 235, 0.9), rgba(254, 243, 199, 0.9))',
+              border: '1px solid rgba(245, 158, 11, 0.2)',
+              borderRadius: '16px',
+              animation: 'fade-in-up 0.3s ease-out',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 8px 24px rgba(245, 158, 11, 0.1)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div className="wave-container" style={{ height: '16px' }}>
+                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
+                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
+                <div className="wave-bar" style={{ background: 'linear-gradient(to top, #f59e0b, #fbbf24)', width: '2px' }} />
+              </div>
+              <Text style={{ fontStyle: 'italic', color: '#92400e', fontWeight: 500 }}>
+                {interimText}
+              </Text>
+            </div>
+          </div>
+        )}
+
+        {/* Keyboard input */}
+        {showKeyboard && (
+          <div
+            style={{
+              display: 'flex',
+              gap: '12px',
+              marginBottom: '18px',
+              padding: '14px',
+              background: 'linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,255,0.9))',
+              borderRadius: '18px',
+              border: '1px solid rgba(99, 102, 241, 0.1)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+              animation: 'slide-in-left 0.3s ease-out',
+              backdropFilter: 'blur(20px)',
+            }}
+          >
+            <input
+              ref={inputRef}
+              value={textInput}
+              onChange={(e) => setTextInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="输入消息..."
+              className="input-glow"
+              style={{
+                flex: 1,
+                padding: '12px 18px',
+                border: '1.5px solid #e5e7eb',
+                borderRadius: '14px',
+                outline: 'none',
+                fontSize: '14px',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                background: 'rgba(255, 255, 255, 0.8)',
+                color: '#1e1b4b',
+              }}
+            />
+            <button
+              onClick={handleSendText}
+              disabled={!textInput.trim() || loading}
+              className="send-btn"
+              style={{
+                padding: '12px 22px',
+                background: textInput.trim()
+                  ? 'linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc)'
+                  : '#e5e7eb',
+                backgroundSize: '200% 200%',
+                animation: textInput.trim() ? 'gradient-flow 3s ease infinite' : 'none',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '14px',
+                cursor: textInput.trim() ? 'pointer' : 'not-allowed',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                boxShadow: textInput.trim()
+                  ? '0 8px 24px rgba(99, 102, 241, 0.3)'
+                  : 'none',
+                transform: textInput.trim() ? 'scale(1)' : 'scale(0.95)',
+              }}
+            >
+              <SendOutlined style={{ fontSize: '16px' }} />
+            </button>
+          </div>
+        )}
 
         {/* Error message */}
         {error && (
