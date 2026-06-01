@@ -1,6 +1,8 @@
 # VoiceCal 语音日历
 
+Demo视频演示：通过网盘分享的文件：语音日历 和另外 1 个页面 - 用户1 - Microsoft​ Edge 2026-05-31 23-46-26.mp4 链接: https://pan.baidu.com/s/1TXLfgHEsDA3MtHrYwXzyTg?pwd=tn3t 提取码: tn3t
 (git太大了传不上来SOS）
+
 
 > 🎙️ AI 驱动的语音日历工具，让日程管理更高效、更便捷
 

@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useCallback } from 'react';
+
 import { Typography, Spin } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 import { ConversationItem } from '@/types';
@@ -12,6 +13,7 @@ interface ConversationLogProps {
   onSelectOption?: (optionId: string) => void;
   onConfirm?: (messageId: string) => void;
   onCancel?: (messageId: string) => void;
+  onCustomInput?: (text: string) => void;
   onLoadMore?: () => void;
   hasMore?: boolean;
 }
@@ -28,6 +30,7 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
   onSelectOption,
   onConfirm,
   onCancel,
+  onCustomInput,
   onLoadMore,
   hasMore = false,
 }) => {
@@ -36,7 +39,15 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
   const isInitialMount = useRef(true);
   const prevHistoryLength = useRef(0);
 
-  // Auto scroll to bottom only when new messages are added (not on initial mount)
+  // Check if user is near the bottom of the chat
+  const isNearBottom = useCallback(() => {
+    if (!containerRef.current) return true;
+    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    // Consider "near bottom" if within 150px of the bottom
+    return scrollHeight - scrollTop - clientHeight < 150;
+  }, []);
+
+  // Auto scroll to bottom only when new messages are added AND user is already near bottom
   useEffect(() => {
     // Skip scroll on initial mount to prevent page jumping
     if (isInitialMount.current) {
@@ -45,17 +56,18 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
       return;
     }
 
-    // Only scroll if new messages were added
+    // Only scroll if new messages were added AND user is near the bottom
     if (conversationHistory.length > prevHistoryLength.current) {
-      // Use container scrollTop instead of scrollIntoView to prevent page scrolling
-      setTimeout(() => {
-        if (containerRef.current) {
-          containerRef.current.scrollTop = containerRef.current.scrollHeight;
-        }
-      }, 100);
+      if (isNearBottom()) {
+        setTimeout(() => {
+          if (containerRef.current) {
+            containerRef.current.scrollTop = containerRef.current.scrollHeight;
+          }
+        }, 100);
+      }
     }
     prevHistoryLength.current = conversationHistory.length;
-  }, [conversationHistory.length]);
+  }, [conversationHistory.length, isNearBottom]);
 
   // Handle scroll for loading more
   const handleScroll = useCallback(() => {
@@ -135,6 +147,7 @@ const ConversationLog: React.FC<ConversationLogProps> = ({
               onSelectOption={onSelectOption}
               onConfirm={onConfirm}
               onCancel={onCancel}
+              onCustomInput={onCustomInput}
             />
           ))}
           <div ref={chatEndRef} />

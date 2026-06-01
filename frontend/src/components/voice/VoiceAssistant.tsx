@@ -530,6 +530,14 @@ const VoiceAssistant: React.FC = () => {
             onSelectOption={selectOption}
             onConfirm={confirm}
             onCancel={cancel}
+            onCustomInput={async (text) => {
+              try {
+                await process(text);
+                await refreshEvents();
+              } catch (error) {
+                console.error('Failed to process custom input:', error);
+              }
+            }}
           />
         </div>
 

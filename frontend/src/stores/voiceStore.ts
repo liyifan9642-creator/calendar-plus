@@ -229,7 +229,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => ({
         clarificationOptions: response.options || [],
         sessionId: sessionId, // 保持现有 sessionId
         loading: false,
-        voiceState: 'responding',
+        voiceState: 'idle',
       });
 
       // 添加到对话历史
@@ -263,7 +263,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => ({
    * POST /api/voice/confirm - 确认或取消操作
    */
   confirmAction: async (request: ConfirmRequest) => {
-    set({ loading: true, error: null });
+    set({ loading: true, error: null, voiceState: 'processing' });
 
     try {
       const response = await voiceApi.confirm(request);
@@ -275,6 +275,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => ({
         systemResponse: response.responseText,
         clarificationOptions: [],
         loading: false,
+        voiceState: 'idle',
       });
 
       // 更新对话历史中对应的记录
@@ -342,7 +343,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => ({
         systemResponse: processResponse.responseText,
         clarificationOptions: processResponse.options || [],
         loading: false,
-        voiceState: 'responding',
+        voiceState: 'idle',
       });
 
       // 添加到对话历史
@@ -405,7 +406,7 @@ export const useVoiceStore = create<VoiceStore>((set, get) => ({
         systemResponse: processResponse.responseText,
         clarificationOptions: processResponse.options || [],
         loading: false,
-        voiceState: 'responding',
+        voiceState: 'idle',
       });
 
       // 添加到对话历史

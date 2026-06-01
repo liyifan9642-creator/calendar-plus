@@ -8,6 +8,7 @@ interface MessageBubbleProps {
   onSelectOption?: (optionId: string) => void;
   onConfirm?: (messageId: string) => void;
   onCancel?: (messageId: string) => void;
+  onCustomInput?: (text: string) => void;
 }
 
 /**
@@ -21,6 +22,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   onSelectOption,
   onConfirm,
   onCancel,
+  onCustomInput,
 }) => {
   const message = item.message;
   const isClarification = message?.status === 'NEED_CLARIFICATION';
@@ -104,9 +106,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
               })) || []}
               question={message.clarificationQuestion}
               onSelect={(optionId) => onSelectOption?.(optionId)}
-              onCustomInput={(text) => {
-                console.log('Custom clarification input:', text);
-              }}
+              onCustomInput={onCustomInput}
             />
           )}
 

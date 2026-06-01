@@ -343,7 +343,7 @@ export const useVoice = () => {
     }
 
     // Stop MediaRecorder (will trigger onstop callback which handles processing)
-    if (hasMediaRecorder) {
+    if (hasMediaRecorder && mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
     }
 
