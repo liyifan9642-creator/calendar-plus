@@ -270,14 +270,14 @@ public class TimeParserService {
                 if (hour < 12) {
                     dateTime = dateTime.plusHours(12);
                     ambiguous = true;
-                    disambiguation = "Expression contains PM marker, adjusted from "
-                            + hour + ":00 to " + dateTime.getHour() + ":00";
+                    disambiguation = "检测到下午/晚上标记，已从"
+                            + hour + ":00调整为" + dateTime.getHour() + ":00";
                 }
             } else if (originalText.contains("凌晨") || originalText.contains("早上")
                     || originalText.contains("上午")) {
                 if (hour >= 12 && hour != 12) {
                     ambiguous = true;
-                    disambiguation = "Expression contains AM marker, resolved to "
+                    disambiguation = "检测到上午标记，已确认为"
                             + hour + ":00";
                 }
             }
@@ -357,16 +357,16 @@ public class TimeParserService {
             if (hasPmMarker) {
                 timePart = timePart.plusHours(12);
                 ambiguous = true;
-                disambiguation = "PM marker detected, adjusted to afternoon";
+                disambiguation = "检测到下午/晚上标记，已调整为下午时间";
             } else if (!hasAmMarker && timePart.getHour() >= 1 && timePart.getHour() <= 6) {
                 // Ambiguous: "两点" without context -- could be AM or PM
                 // Default to PM for user convenience in calendar context
                 ambiguous = true;
                 int originalHour = timePart.getHour();
                 timePart = timePart.plusHours(12);
-                disambiguation = "No AM/PM marker; defaulted to afternoon ("
-                        + timePart.getHour() + ":00). "
-                        + "Original was " + originalHour + ":00";
+                disambiguation = "未检测到上午/下午标记，默认为下午（"
+                        + timePart.getHour() + ":00），"
+                        + "原始时间为" + originalHour + ":00";
             }
         }
 

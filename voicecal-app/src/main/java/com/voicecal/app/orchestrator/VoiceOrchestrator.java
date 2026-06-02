@@ -933,7 +933,9 @@ public class VoiceOrchestrator implements VoiceOrchestrationService {
 
             // 对于 QUERY 意图，只要有日期就可以认为是完整的
             if (message.getMode() == MessageMode.QUERY) {
-                if (message.getDate() != null) {
+                if (message.getWeekStartDate() != null) {
+                    log.info("QUERY 意图，有周范围信息，视为完整: weekStart={}", message.getWeekStartDate());
+                } else if (message.getDate() != null) {
                     log.info("QUERY 意图，有日期信息，视为完整");
                 } else {
                     // 查询今天的信息
@@ -1025,6 +1027,15 @@ public class VoiceOrchestrator implements VoiceOrchestrationService {
                 message.setDate(LocalDate.parse(entities.get("date")));
             } catch (Exception e) {
                 log.warn("无法解析日期: {}", entities.get("date"));
+            }
+        }
+
+        // 周范围查询（本周/这周）
+        if (entities.containsKey("weekStart")) {
+            try {
+                message.setWeekStartDate(LocalDate.parse(entities.get("weekStart")));
+            } catch (Exception e) {
+                log.warn("无法解析周起始日期: {}", entities.get("weekStart"));
             }
         }
 
@@ -1167,6 +1178,10 @@ public class VoiceOrchestrator implements VoiceOrchestrationService {
                 return "好的，已为您更新事件。";
 
             case QUERY:
+                // 周范围查询
+                if (message.getWeekStartDate() != null) {
+                    return generateWeekQueryResponseText(message.getWeekStartDate());
+                }
                 // 查询事件并生成响应
                 return generateQueryResponseText(message);
 
@@ -1215,6 +1230,58 @@ public class VoiceOrchestrator implements VoiceOrchestrationService {
         } catch (Exception e) {
             log.error("查询事件失败: {}", e.getMessage(), e);
             return "查询日程时出现错误，请稍后重试。";
+        }
+    }
+
+    /**
+     * 生成周范围查询响应文本
+     */
+    private String generateWeekQueryResponseText(LocalDate weekStart) {
+        try {
+            Map<LocalDate, List<CalendarEvent>> weekEvents = calendarService.getEventsByWeek(weekStart);
+
+            // 统计本周总事件数
+            int totalEvents = weekEvents.values().stream().mapToInt(List::size).sum();
+
+            if (totalEvents == 0) {
+                return String.format("%s至%s这一周没有安排。",
+                        weekStart.format(DateTimeFormatter.ofPattern("M月d日")),
+                        weekStart.plusDays(6).format(DateTimeFormatter.ofPattern("M月d日")));
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(String.format("%s至%s这一周共有%d个安排：\n",
+                    weekStart.format(DateTimeFormatter.ofPattern("M月d日")),
+                    weekStart.plusDays(6).format(DateTimeFormatter.ofPattern("M月d日")),
+                    totalEvents));
+
+            String[] dayNames = {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+            for (int i = 0; i < 7; i++) {
+                LocalDate date = weekStart.plusDays(i);
+                List<CalendarEvent> dayEvents = weekEvents.getOrDefault(date, List.of());
+                if (!dayEvents.isEmpty()) {
+                    sb.append(String.format("\n【%s %s】\n",
+                            dayNames[i],
+                            date.format(DateTimeFormatter.ofPattern("M月d日"))));
+                    for (int j = 0; j < dayEvents.size(); j++) {
+                        CalendarEvent event = dayEvents.get(j);
+                        sb.append(String.format("  %d. %s (%s-%s)",
+                                j + 1,
+                                event.getTitle(),
+                                event.getStartTime().format(DateTimeFormatter.ofPattern("HH:mm")),
+                                event.getEndTime().format(DateTimeFormatter.ofPattern("HH:mm"))));
+                        if (event.getLocation() != null && !event.getLocation().isEmpty()) {
+                            sb.append(String.format(" @%s", event.getLocation()));
+                        }
+                        sb.append("\n");
+                    }
+                }
+            }
+
+            return sb.toString().trim();
+        } catch (Exception e) {
+            log.error("查询周事件失败: {}", e.getMessage(), e);
+            return "查询周日程时出现错误，请稍后重试。";
         }
     }
 

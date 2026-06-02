@@ -56,6 +56,10 @@ public class Message {
     @Column(name = "event_date")
     private LocalDate date;
 
+    /** 周范围查询的起始日期（本周一） */
+    @Column(name = "week_start_date")
+    private LocalDate weekStartDate;
+
     /** 开始时间 */
     @Column(name = "start_time")
     private LocalTime startTime;

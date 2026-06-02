@@ -54,40 +54,44 @@ public class LlmServiceImpl implements LlmService {
     // ======================== Prompts ========================
 
     private static final String INTENT_RECOGNITION_SYSTEM_PROMPT =
-        "You are a calendar assistant intent recognition module. "
-        + "Analyze the user's input and return ONLY a JSON object, no other text.\n\n"
-        + "Return format:\n"
+        "你是一个日历助手意图识别模块。"
+        + "分析用户输入，只返回 JSON 对象，不要返回其他内容。\n\n"
+        + "返回格式：\n"
         + "{\"intent\":\"CREATE\",\"confidence\":0.95,\"entities\":{\"title\":\"meeting\",\"date\":\"2026-06-01\",\"startTime\":\"15:00\",\"endTime\":\"17:00\"},\"isComplete\":true,\"missingFields\":[],\"message\":\"\"}\n\n"
-        + "Rules:\n"
-        + "1. intent must be one of: CREATE, DELETE, UPDATE, QUERY\n"
-        + "2. isComplete indicates if info is complete (needs specific time and event content)\n"
-        + "3. missingFields lists missing fields (possible values: title, date, startTime, endTime)\n"
-        + "4. If user says 'cancel', 'delete', 'remove', intent is DELETE\n"
-        + "5. If user says 'change', 'move', 'postpone', intent is UPDATE\n"
-        + "6. If user asks 'what', 'when', 'schedule', intent is QUERY\n"
-        + "7. If user says 'create', 'add', 'schedule a meeting', intent is CREATE\n"
-        + "8. confidence is 0.0-1.0 float\n"
-        + "9. For QUERY intent, isComplete can be true if date exists\n"
-        + "10. Return ONLY the JSON object, nothing else";
+        + "规则：\n"
+        + "1. intent 必须是以下之一：CREATE, DELETE, UPDATE, QUERY\n"
+        + "2. isComplete 表示信息是否完整（需要具体时间和事件内容）\n"
+        + "3. missingFields 列出缺失字段（可能的值：title, date, startTime, endTime）\n"
+        + "4. 如果用户说'取消'、'删除'、'去掉'，intent 为 DELETE\n"
+        + "5. 如果用户说'改'、'修改'、'推迟'，intent 为 UPDATE\n"
+        + "6. 如果用户问'什么'、'什么时候'、'行程'、'安排'，intent 为 QUERY\n"
+        + "7. 如果用户说'创建'、'添加'、'安排一个会议'，intent 为 CREATE\n"
+        + "8. confidence 是 0.0-1.0 的浮点数\n"
+        + "9. 对于 QUERY 意图，如果有日期信息则 isComplete 为 true\n"
+        + "10. 周范围查询处理：当用户提到'本周'、'这周'、'这一周'、'本周行程'等周范围查询时，"
+        + "在 entities 中返回 weekStart 字段（本周一的日期，格式 YYYY-MM-DD），不要返回 date 字段\n"
+        + "11. 只返回 JSON 对象，不要返回其他内容";
 
     private static final String COMPLETENESS_CHECK_SYSTEM_PROMPT =
-        "Check if the calendar event information is complete. Return ONLY a JSON object.\n\n"
-        + "Completeness requirements:\n"
-        + "1. Must have specific date (YYYY-MM-DD format)\n"
-        + "2. Must have specific time (HH:mm format) or time range (startTime-endTime)\n"
-        + "3. Must have event content/title\n\n"
-        + "Return format:\n"
-        + "{\"isComplete\":true,\"missingFields\":[],\"suggestions\":\"\"}";
+        "检查日历事件信息是否完整。只返回 JSON 对象，不要返回其他内容。\n\n"
+        + "完整性要求：\n"
+        + "1. 必须有具体日期（YYYY-MM-DD 格式）\n"
+        + "2. 必须有具体时间（HH:mm 格式）或时间范围（startTime-endTime）\n"
+        + "3. 必须有事件内容/标题\n\n"
+        + "返回格式：\n"
+        + "{\"isComplete\":true,\"missingFields\":[],\"suggestions\":\"\"}\n\n"
+        + "重要：suggestions 字段必须使用中文提示用户补充缺失信息。";
 
     private static final String CONFLICT_RESOLUTION_SYSTEM_PROMPT =
-        "User wants to create a new event but it conflicts with existing events. "
-        + "Determine the user's real intention. Return ONLY a JSON object.\n\n"
-        + "Possible cases:\n"
-        + "1. User wants to add a new event (coexist with existing) - action: CREATE_NEW\n"
-        + "2. User wants to replace existing event with new one - action: REPLACE\n"
-        + "3. User wants to modify existing event's time - action: MODIFY\n\n"
-        + "Return format:\n"
-        + "{\"action\":\"CREATE_NEW\",\"targetEventId\":\"\",\"needClarification\":false,\"clarificationQuestion\":\"\"}";
+        "用户想创建一个新事件，但与已有事件冲突。"
+        + "判断用户的真实意图。只返回 JSON 对象，不要返回其他内容。\n\n"
+        + "可能的情况：\n"
+        + "1. 用户想添加新事件（与已有事件共存）- action: CREATE_NEW\n"
+        + "2. 用户想用新事件替换已有事件 - action: REPLACE\n"
+        + "3. 用户想修改已有事件的时间 - action: MODIFY\n\n"
+        + "返回格式：\n"
+        + "{\"action\":\"CREATE_NEW\",\"targetEventId\":\"\",\"needClarification\":false,\"clarificationQuestion\":\"\"}\n\n"
+        + "重要：clarificationQuestion 字段必须使用中文提问。";
 
     // ======================== 意图识别 ========================
 
