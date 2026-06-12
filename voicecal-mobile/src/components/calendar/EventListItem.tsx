@@ -1,16 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CalendarEvent } from '../../models/CalendarEvent';
 import { EventStatus } from '../../models/enums';
 import { parseIsoDateTime } from '../../utils/dateUtils';
-
-const PRIMARY = '#2196F3';
+import { Colors, Spacing, Radius, Typography, Shadows } from '../../theme';
 
 interface EventListItemProps {
   event: CalendarEvent;
@@ -21,13 +15,24 @@ interface EventListItemProps {
 function getStatusColor(status: EventStatus): string {
   switch (status) {
     case EventStatus.ACTIVE:
-      return PRIMARY;
+      return Colors.primary;
     case EventStatus.COMPLETED:
-      return '#4CAF50';
+      return Colors.success;
     case EventStatus.CANCELLED:
-      return '#9E9E9E';
+      return Colors.textTertiary;
     default:
-      return PRIMARY;
+      return Colors.primary;
+  }
+}
+
+function getStatusLabel(status: EventStatus): string {
+  switch (status) {
+    case EventStatus.COMPLETED:
+      return '已完成';
+    case EventStatus.CANCELLED:
+      return '已取消';
+    default:
+      return '';
   }
 }
 
@@ -35,6 +40,7 @@ export default function EventListItem({ event, onPress, onDelete }: EventListIte
   const { time: startTime } = parseIsoDateTime(event.startTime);
   const { time: endTime } = parseIsoDateTime(event.endTime);
   const statusColor = getStatusColor(event.status);
+  const statusLabel = getStatusLabel(event.status);
 
   return (
     <TouchableOpacity
@@ -43,35 +49,56 @@ export default function EventListItem({ event, onPress, onDelete }: EventListIte
       onLongPress={() => onDelete?.(event)}
       activeOpacity={0.7}
     >
+      {/* Left accent bar */}
       <View style={[styles.colorBar, { backgroundColor: statusColor }]} />
+
+      {/* Time column */}
+      <View style={styles.timeColumn}>
+        <Text style={styles.startTime}>{startTime}</Text>
+        <View style={styles.timeDivider} />
+        <Text style={styles.endTime}>{endTime}</Text>
+      </View>
+
+      {/* Main content */}
       <View style={styles.content}>
-        <Text style={styles.title} numberOfLines={1}>
-          {event.title}
-        </Text>
-        <Text style={styles.timeRange}>
-          {startTime} - {endTime}
-        </Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title} numberOfLines={1}>
+            {event.title}
+          </Text>
+          {statusLabel ? (
+            <View style={[styles.statusBadge, { backgroundColor: statusColor + '18' }]}>
+              <Text style={[styles.statusText, { color: statusColor }]}>{statusLabel}</Text>
+            </View>
+          ) : null}
+        </View>
+
         {event.location ? (
           <View style={styles.locationRow}>
-            <Ionicons name="location-outline" size={14} color="#757575" />
+            <Ionicons name="location-outline" size={13} color={Colors.textTertiary} />
             <Text style={styles.location} numberOfLines={1}>
               {event.location}
             </Text>
           </View>
         ) : null}
+
         {event.description ? (
           <Text style={styles.description} numberOfLines={1}>
             {event.description}
           </Text>
         ) : null}
       </View>
+
+      {/* Delete button */}
       {onDelete && (
         <TouchableOpacity
           style={styles.deleteButton}
           onPress={() => onDelete(event)}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+          activeOpacity={0.6}
         >
-          <Ionicons name="trash-outline" size={18} color="#F44336" />
+          <View style={styles.deleteIconBg}>
+            <Ionicons name="trash-outline" size={15} color={Colors.error} />
+          </View>
         </TouchableOpacity>
       )}
     </TouchableOpacity>
@@ -82,57 +109,91 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginVertical: 4,
-    elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.lg,
+    marginHorizontal: Spacing.lg,
+    marginVertical: Spacing.xs + 2,
+    ...Shadows.medium,
     overflow: 'hidden',
   },
   colorBar: {
     width: 4,
     alignSelf: 'stretch',
-    borderTopLeftRadius: 8,
-    borderBottomLeftRadius: 8,
+    borderTopLeftRadius: Radius.lg,
+    borderBottomLeftRadius: Radius.lg,
+  },
+  timeColumn: {
+    alignItems: 'center',
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
+    minWidth: 52,
+  },
+  startTime: {
+    ...Typography.bodyMedium,
+    color: Colors.primary,
+  },
+  timeDivider: {
+    width: 1,
+    height: 8,
+    backgroundColor: Colors.border,
+    marginVertical: 3,
+  },
+  endTime: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: Colors.textTertiary,
   },
   content: {
     flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingVertical: Spacing.md,
+    paddingRight: Spacing.sm,
+  },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
   },
   title: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#212121',
-    marginBottom: 4,
+    ...Typography.subtitle,
+    color: Colors.textPrimary,
+    flex: 1,
   },
-  timeRange: {
-    fontSize: 13,
-    color: '#757575',
-    marginBottom: 4,
+  statusBadge: {
+    paddingHorizontal: Spacing.sm,
+    paddingVertical: 2,
+    borderRadius: Radius.sm,
+    marginLeft: Spacing.sm,
+  },
+  statusText: {
+    fontSize: 10,
+    fontWeight: '600',
   },
   locationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
+    marginTop: 2,
   },
   location: {
-    fontSize: 13,
-    color: '#757575',
+    fontSize: 12,
+    color: Colors.textTertiary,
     marginLeft: 4,
     flex: 1,
   },
   description: {
-    fontSize: 13,
-    color: '#9E9E9E',
-    marginTop: 2,
+    fontSize: 12,
+    color: Colors.textTertiary,
+    marginTop: 3,
   },
   deleteButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
+  },
+  deleteIconBg: {
+    width: 30,
+    height: 30,
+    borderRadius: Radius.sm,
+    backgroundColor: Colors.errorLight,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

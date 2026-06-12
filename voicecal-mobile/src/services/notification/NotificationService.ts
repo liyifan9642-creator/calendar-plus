@@ -1,18 +1,39 @@
-import * as Notifications from 'expo-notifications';
 import dayjs from 'dayjs';
 import { CalendarEvent, Reminder } from '../../models';
 import { calendarService } from '../calendar';
 
-// Configure how notifications appear when the app is in the foreground
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: true,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+// Lazy-load expo-notifications to avoid crashes in environments where native modules are unavailable
+let NotificationsModule: typeof import('expo-notifications') | null = null;
+let notificationsLoadFailed = false;
+let handlerConfigured = false;
+
+async function getNotifications(): Promise<typeof import('expo-notifications')> {
+  if (notificationsLoadFailed) {
+    throw new Error('通知功能需要 Development Build，Expo Go 不完全支持此功能。');
+  }
+  if (!NotificationsModule) {
+    try {
+      NotificationsModule = await import('expo-notifications');
+      // Configure how notifications appear when the app is in the foreground (once)
+      if (!handlerConfigured) {
+        NotificationsModule.setNotificationHandler({
+          handleNotification: async () => ({
+            shouldShowAlert: true,
+            shouldPlaySound: true,
+            shouldSetBadge: false,
+            shouldShowBanner: true,
+            shouldShowList: true,
+          }),
+        });
+        handlerConfigured = true;
+      }
+    } catch {
+      notificationsLoadFailed = true;
+      throw new Error('通知功能需要 Development Build，Expo Go 不完全支持此功能。');
+    }
+  }
+  return NotificationsModule;
+}
 
 class NotificationService {
   /**
@@ -20,6 +41,7 @@ class NotificationService {
    * Returns true if permission is granted.
    */
   async requestPermissions(): Promise<boolean> {
+    const Notifications = await getNotifications();
     const { status: existingStatus } = await Notifications.getPermissionsAsync();
     let finalStatus = existingStatus;
 
@@ -33,17 +55,14 @@ class NotificationService {
 
   /**
    * Schedule a local notification for an event reminder.
-   * @param event The calendar event to remind about
-   * @param minutesBefore How many minutes before the event to trigger the reminder
-   * @returns The notification identifier
    */
   async scheduleEventReminder(
     event: CalendarEvent,
     minutesBefore: number
   ): Promise<string> {
+    const Notifications = await getNotifications();
     const triggerDate = dayjs(event.startTime).subtract(minutesBefore, 'minute');
 
-    // Don't schedule if the trigger time is in the past
     if (triggerDate.isBefore(dayjs())) {
       throw new Error('Cannot schedule a reminder in the past');
     }
@@ -65,17 +84,14 @@ class NotificationService {
 
   /**
    * Schedule a notification for a specific reminder object.
-   * @param reminder The reminder record
-   * @param event The associated calendar event
-   * @returns The notification identifier
    */
   async scheduleReminder(
     reminder: Reminder,
     event: CalendarEvent
   ): Promise<string> {
+    const Notifications = await getNotifications();
     const triggerDate = dayjs(reminder.remindAt);
 
-    // Don't schedule if the trigger time is in the past
     if (triggerDate.isBefore(dayjs())) {
       throw new Error('Cannot schedule a reminder in the past');
     }
@@ -111,6 +127,7 @@ class NotificationService {
    * Cancel a single scheduled notification.
    */
   async cancelNotification(notificationId: string): Promise<void> {
+    const Notifications = await getNotifications();
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   }
 
@@ -118,14 +135,15 @@ class NotificationService {
    * Cancel all scheduled notifications.
    */
   async cancelAllNotifications(): Promise<void> {
+    const Notifications = await getNotifications();
     await Notifications.cancelAllScheduledNotificationsAsync();
   }
 
   /**
-   * Check for due reminders via calendarService, send notifications for each,
-   * and mark them as SENT.
+   * Check for due reminders, send notifications, and mark them as SENT.
    */
   async processPendingReminders(): Promise<void> {
+    const Notifications = await getNotifications();
     const dueReminders = await calendarService.processPendingReminders();
 
     for (const reminder of dueReminders) {
@@ -148,7 +166,7 @@ class NotificationService {
               type: 'due_reminder',
             },
           },
-          trigger: null, // Fire immediately
+          trigger: null,
         });
       } catch (error: any) {
         console.error(

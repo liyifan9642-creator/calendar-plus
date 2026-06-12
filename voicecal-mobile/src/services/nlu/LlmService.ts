@@ -125,7 +125,21 @@ export class LlmService {
       console.warn('LLM response format unexpected:', response.data);
       return '';
     } catch (error: any) {
-      console.error('LLM call failed:', error?.message ?? error);
+      const status = error?.response?.status;
+      const msg = error?.message ?? 'Unknown error';
+
+      if (status === 401) {
+        console.error('LLM call failed: API Key 无效 (401 Unauthorized)');
+      } else if (status === 429) {
+        console.error('LLM call failed: 请求过于频繁 (429 Rate Limited)');
+      } else if (status === 500 || status === 502 || status === 503) {
+        console.error(`LLM call failed: 服务器错误 (${status})`);
+      } else if (error?.code === 'ECONNABORTED' || msg.includes('timeout')) {
+        console.error('LLM call failed: 请求超时');
+      } else {
+        console.error('LLM call failed:', msg);
+      }
+
       return '';
     }
   }

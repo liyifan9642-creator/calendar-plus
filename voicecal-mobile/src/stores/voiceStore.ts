@@ -42,9 +42,12 @@ export const useVoiceStore = create<VoiceState>((set) => ({
   error: null,
 
   addMessage: (message: Message) => {
-    set((state) => ({
-      messages: [...state.messages, message],
-    }));
+    set((state) => {
+      // Prevent duplicate messages with the same ID
+      const exists = state.messages.some((m) => m.id === message.id);
+      if (exists) return state;
+      return { messages: [...state.messages, message] };
+    });
   },
 
   updateMessageStatus: (id: string, status: MessageStatus) => {

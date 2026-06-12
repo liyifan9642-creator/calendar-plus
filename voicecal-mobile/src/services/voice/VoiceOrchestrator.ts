@@ -5,6 +5,15 @@ import { TimeParserService } from '../nlu/TimeParserService';
 import { generateId } from '../../utils/uuid';
 import dayjs from 'dayjs';
 
+/**
+ * Safely create ISO string from date/time strings.
+ * Returns null if the date/time is invalid.
+ */
+function safeToIsoString(date: string, time: string): string | null {
+  const d = dayjs(`${date} ${time}`);
+  return d.isValid() ? d.toISOString() : null;
+}
+
 export interface OrchestratorResponse {
   success: boolean;
   message: Message;
@@ -87,10 +96,13 @@ class VoiceOrchestrator {
 
       // ======================== Step 3: Conflict Detection (CREATE only) ========================
       if (message.mode === MessageMode.CREATE && message.date && message.startTime) {
-        const startIso = dayjs(`${message.date} ${message.startTime}`).toISOString();
+        const startIso = safeToIsoString(message.date, message.startTime);
+        if (!startIso) {
+          throw new Error(`无效的日期或时间：${message.date} ${message.startTime}`);
+        }
         const endIso = message.endTime
-          ? dayjs(`${message.date} ${message.endTime}`).toISOString()
-          : dayjs(`${message.date} ${message.startTime}`).add(1, 'hour').toISOString();
+          ? safeToIsoString(message.date, message.endTime) ?? dayjs(startIso).add(1, 'hour').toISOString()
+          : dayjs(startIso).add(1, 'hour').toISOString();
 
         const conflicts = await calendarService.checkForConflicts(startIso, endIso, null);
 
@@ -174,10 +186,13 @@ class VoiceOrchestrator {
           throw new Error('创建事件需要日期和开始时间');
         }
 
-        const startIso = dayjs(`${message.date} ${message.startTime}`).toISOString();
+        const startIso = safeToIsoString(message.date, message.startTime);
+        if (!startIso) {
+          throw new Error(`无效的日期或时间：${message.date} ${message.startTime}`);
+        }
         const endIso = message.endTime
-          ? dayjs(`${message.date} ${message.endTime}`).toISOString()
-          : dayjs(`${message.date} ${message.startTime}`).add(1, 'hour').toISOString();
+          ? safeToIsoString(message.date, message.endTime) ?? dayjs(startIso).add(1, 'hour').toISOString()
+          : dayjs(startIso).add(1, 'hour').toISOString();
 
         const newEvent = await calendarService.createEvent({
           title: message.title || '新事件',
@@ -210,9 +225,13 @@ class VoiceOrchestrator {
         if (message.description !== undefined) updates.description = message.description;
 
         if (message.date && message.startTime) {
-          updates.startTime = dayjs(`${message.date} ${message.startTime}`).toISOString();
-          if (message.endTime) {
-            updates.endTime = dayjs(`${message.date} ${message.endTime}`).toISOString();
+          const startIso = safeToIsoString(message.date, message.startTime);
+          if (startIso) {
+            updates.startTime = startIso;
+            if (message.endTime) {
+              const endIso = safeToIsoString(message.date, message.endTime);
+              if (endIso) updates.endTime = endIso;
+            }
           }
         }
 
@@ -306,17 +325,19 @@ class VoiceOrchestrator {
     }
 
     try {
-      message.status = MessageStatus.CONFIRMED;
-      const event = await this.executeMessageOperation(message);
+      // Work on a copy to avoid mutating the original store object
+      const msg = { ...message };
+      msg.status = MessageStatus.CONFIRMED;
+      const event = await this.executeMessageOperation(msg);
 
-      const responseText = this.generateResponseText(message, event);
-      message.responseText = responseText;
-      message.status = MessageStatus.EXECUTED;
-      message.updatedAt = dayjs().toISOString();
+      const responseText = this.generateResponseText(msg, event);
+      msg.responseText = responseText;
+      msg.status = MessageStatus.EXECUTED;
+      msg.updatedAt = dayjs().toISOString();
 
       return {
         success: true,
-        message,
+        message: msg,
         responseText,
         affectedEvents: event ? [event] : undefined,
       };

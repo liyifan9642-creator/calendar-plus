@@ -1,61 +1,67 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { CalendarEvent } from '../../models/CalendarEvent';
 import EventListItem from './EventListItem';
-import { formatDate } from '../../utils/dateUtils';
-
-const PRIMARY = '#2196F3';
+import { Colors, Spacing, Radius, Typography, Shadows } from '../../theme';
 
 interface DayEventsListProps {
   events: CalendarEvent[];
   date: string;
   onEventPress: (event: CalendarEvent) => void;
+  onDeleteEvent?: (event: CalendarEvent) => void;
   onAddEvent: () => void;
 }
 
 function formatDisplayDate(dateStr: string): string {
   const d = new Date(dateStr + 'T00:00:00');
   const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const year = d.getFullYear();
   const month = d.getMonth() + 1;
   const day = d.getDate();
   const weekday = weekdays[d.getDay()];
-  return `${month}月${day}日 ${weekday}`;
+  return `${year}年${month}月${day}日 ${weekday}`;
 }
 
 export default function DayEventsList({
   events,
   date,
   onEventPress,
+  onDeleteEvent,
   onAddEvent,
 }: DayEventsListProps) {
   const displayDate = formatDisplayDate(date);
 
   const renderHeader = () => (
     <View style={styles.header}>
-      <View>
+      <View style={styles.headerLeft}>
         <Text style={styles.dateText}>{displayDate}</Text>
-        <Text style={styles.countText}>
-          {events.length > 0 ? `${events.length} 个事件` : '没有事件'}
-        </Text>
+        <View style={styles.countRow}>
+          <View style={styles.countDot} />
+          <Text style={styles.countText}>
+            {events.length > 0 ? `${events.length} 项事件` : '暂无事件'}
+          </Text>
+        </View>
       </View>
-      <TouchableOpacity style={styles.addButton} onPress={onAddEvent}>
-        <Ionicons name="add" size={24} color="#FFFFFF" />
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={onAddEvent}
+        activeOpacity={0.7}
+      >
+        <Ionicons name="add" size={20} color={Colors.textOnPrimary} />
       </TouchableOpacity>
     </View>
   );
 
   const renderEmpty = () => (
     <View style={styles.emptyContainer}>
-      <Ionicons name="calendar-outline" size={48} color="#BDBDBD" />
-      <Text style={styles.emptyText}>没有事件</Text>
-      <TouchableOpacity style={styles.emptyAddButton} onPress={onAddEvent}>
+      <View style={styles.emptyIconBg}>
+        <Ionicons name="calendar-outline" size={40} color={Colors.primaryLight} />
+      </View>
+      <Text style={styles.emptyText}>暂无事件</Text>
+      <Text style={styles.emptySubtext}>点击下方按钮添加新事件</Text>
+      <TouchableOpacity style={styles.emptyAddButton} onPress={onAddEvent} activeOpacity={0.7}>
+        <Ionicons name="add-circle-outline" size={18} color={Colors.textOnPrimary} />
         <Text style={styles.emptyAddButtonText}>添加事件</Text>
       </TouchableOpacity>
     </View>
@@ -68,7 +74,7 @@ export default function DayEventsList({
         data={events}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <EventListItem event={item} onPress={onEventPress} />
+          <EventListItem event={item} onPress={onEventPress} onDelete={onDeleteEvent} />
         )}
         ListEmptyComponent={renderEmpty}
         contentContainerStyle={
@@ -83,43 +89,53 @@ export default function DayEventsList({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 16,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: Spacing.lg,
+    paddingVertical: Spacing.lg,
+    backgroundColor: Colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: '#E0E0E0',
+    borderBottomColor: Colors.divider,
+  },
+  headerLeft: {
+    flex: 1,
   },
   dateText: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#212121',
+    ...Typography.h3,
+    color: Colors.textPrimary,
+  },
+  countRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  countDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.primary,
+    marginRight: Spacing.sm,
   },
   countText: {
-    fontSize: 13,
-    color: '#757575',
-    marginTop: 2,
+    ...Typography.caption,
+    color: Colors.textSecondary,
   },
   addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: PRIMARY,
+    width: 36,
+    height: 36,
+    borderRadius: Radius.md,
+    backgroundColor: Colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
+    ...Shadows.colored(Colors.primary, 0.3),
   },
   list: {
-    paddingVertical: 8,
+    paddingVertical: Spacing.sm,
+    paddingBottom: Spacing.xxxl,
   },
   emptyList: {
     flex: 1,
@@ -128,23 +144,39 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 48,
+    paddingVertical: Spacing.xxxl * 2,
+  },
+  emptyIconBg: {
+    width: 80,
+    height: 80,
+    borderRadius: Radius.xxl,
+    backgroundColor: Colors.primaryContainer,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: Spacing.lg,
   },
   emptyText: {
-    fontSize: 16,
-    color: '#9E9E9E',
-    marginTop: 12,
-    marginBottom: 16,
+    ...Typography.subtitle,
+    color: Colors.textSecondary,
+    marginBottom: Spacing.xs,
+  },
+  emptySubtext: {
+    ...Typography.caption,
+    color: Colors.textTertiary,
+    marginBottom: Spacing.xl,
   },
   emptyAddButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 10,
-    borderRadius: 20,
-    backgroundColor: PRIMARY,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: Spacing.xl,
+    paddingVertical: Spacing.md,
+    borderRadius: Radius.full,
+    backgroundColor: Colors.primary,
+    ...Shadows.colored(Colors.primary, 0.25),
   },
   emptyAddButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    ...Typography.bodyMedium,
+    color: Colors.textOnPrimary,
+    marginLeft: Spacing.xs,
   },
 });

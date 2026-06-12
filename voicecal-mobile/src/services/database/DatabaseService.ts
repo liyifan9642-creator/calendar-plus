@@ -2,17 +2,25 @@ import * as SQLite from 'expo-sqlite';
 
 class DatabaseService {
   private db: SQLite.SQLiteDatabase | null = null;
+  private initPromise: Promise<SQLite.SQLiteDatabase> | null = null;
 
   async getDatabase(): Promise<SQLite.SQLiteDatabase> {
-    if (!this.db) {
-      this.db = await SQLite.openDatabaseAsync('voicecal.db');
-      await this.initTables();
+    if (this.db) return this.db;
+
+    // Guard against concurrent initialization
+    if (!this.initPromise) {
+      this.initPromise = (async () => {
+        const db = await SQLite.openDatabaseAsync('voicecal.db');
+        await this.initTables(db);
+        this.db = db;
+        return db;
+      })();
     }
-    return this.db;
+
+    return this.initPromise;
   }
 
-  private async initTables(): Promise<void> {
-    const db = this.db!;
+  private async initTables(db: SQLite.SQLiteDatabase): Promise<void> {
 
     await db.execAsync(`
       CREATE TABLE IF NOT EXISTS calendar_events (

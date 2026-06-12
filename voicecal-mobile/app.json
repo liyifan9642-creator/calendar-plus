@@ -1,11 +1,16 @@
 {
   "expo": {
-    "name": "voicecal-mobile",
+    "name": "VoiceCal",
     "slug": "voicecal-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F5F7FA"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -16,13 +21,28 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.dorkon.voicecalmobile",
+      "permissions": ["RECORD_AUDIO"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-sqlite"
-    ]
+      "expo-sqlite",
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/android-icon-monochrome.png",
+          "color": "#42A5F5"
+        }
+      ],
+      "@react-native-voice/voice"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9d67fc48-fdb3-442a-893e-6c62275524b9"
+      }
+    }
   }
 }

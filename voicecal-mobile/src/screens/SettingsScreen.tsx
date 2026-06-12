@@ -8,8 +8,10 @@ import {
   StyleSheet,
   Alert,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useSettingsStore } from '../stores';
+import { Colors, Gradients, Spacing, Radius, Typography, Shadows } from '../theme';
 
 export const SettingsScreen = () => {
   const {
@@ -56,10 +58,19 @@ export const SettingsScreen = () => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      {/* Header */}
+      <LinearGradient
+        colors={Gradients.header as [string, string]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
+        <Text style={styles.headerTitle}>设置</Text>
+      </LinearGradient>
       {/* LLM Configuration Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="cloud-outline" size={20} color="#2196F3" />
+          <Ionicons name="cloud-outline" size={20} color={Colors.primary} />
           <Text style={styles.sectionTitle}>LLM 配置</Text>
         </View>
 
@@ -112,7 +123,7 @@ export const SettingsScreen = () => {
       {/* Voice Settings Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="mic-outline" size={20} color="#2196F3" />
+          <Ionicons name="mic-outline" size={20} color={Colors.primary} />
           <Text style={styles.sectionTitle}>语音设置</Text>
         </View>
 
@@ -152,7 +163,7 @@ export const SettingsScreen = () => {
       {/* About Section */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Ionicons name="information-circle-outline" size={20} color="#2196F3" />
+          <Ionicons name="information-circle-outline" size={20} color={Colors.primary} />
           <Text style={styles.sectionTitle}>关于</Text>
         </View>
 
@@ -187,97 +198,98 @@ export const SettingsScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: Colors.background,
   },
   contentContainer: {
-    padding: 16,
-    paddingBottom: 32,
+    paddingBottom: Spacing.xxxl,
+  },
+  header: {
+    paddingTop: 48,
+    paddingBottom: Spacing.lg,
+    paddingHorizontal: Spacing.xl,
+    marginBottom: Spacing.lg,
+  },
+  headerTitle: {
+    ...Typography.h2,
+    color: Colors.textPrimary,
   },
   section: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: Colors.surface,
+    borderRadius: Radius.xl,
+    padding: Spacing.xl,
+    marginHorizontal: Spacing.lg,
+    marginBottom: Spacing.lg,
+    ...Shadows.medium,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   sectionTitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#333',
-    marginLeft: 8,
+    ...Typography.subtitle,
+    color: Colors.textPrimary,
+    marginLeft: Spacing.sm,
   },
   fieldContainer: {
-    marginBottom: 14,
+    marginBottom: Spacing.lg,
   },
   label: {
-    fontSize: 14,
-    fontWeight: '500',
-    color: '#555',
-    marginBottom: 6,
+    ...Typography.bodyMedium,
+    color: Colors.textSecondary,
+    marginBottom: Spacing.sm,
   },
   input: {
-    backgroundColor: '#f8f8f8',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    backgroundColor: Colors.surfaceVariant,
+    borderRadius: Radius.md,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.md,
     fontSize: 15,
-    color: '#333',
+    color: Colors.textPrimary,
     borderWidth: 1,
-    borderColor: '#e8e8e8',
+    borderColor: Colors.border,
   },
   hint: {
-    fontSize: 12,
-    color: '#aaa',
-    marginTop: 4,
+    ...Typography.caption,
+    marginTop: Spacing.xs,
   },
   saveButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2196F3',
-    borderRadius: 8,
-    paddingVertical: 12,
-    marginTop: 4,
+    backgroundColor: Colors.primary,
+    borderRadius: Radius.md,
+    paddingVertical: Spacing.md,
+    marginTop: Spacing.xs,
+    ...Shadows.small,
   },
   saveButtonText: {
-    color: '#fff',
-    fontSize: 15,
-    fontWeight: '600',
-    marginLeft: 6,
+    color: Colors.textOnPrimary,
+    ...Typography.bodyMedium,
+    marginLeft: Spacing.sm,
   },
   aboutRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: Spacing.md,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: Colors.divider,
   },
   aboutRowLast: {
     borderBottomWidth: 0,
   },
   aboutLabel: {
-    fontSize: 14,
-    color: '#888',
+    ...Typography.body,
+    color: Colors.textTertiary,
   },
   aboutValue: {
-    fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
+    ...Typography.bodyMedium,
+    color: Colors.textPrimary,
   },
   footer: {
     textAlign: 'center',
-    fontSize: 13,
-    color: '#bbb',
-    marginTop: 8,
+    ...Typography.caption,
+    marginTop: Spacing.sm,
   },
 });
